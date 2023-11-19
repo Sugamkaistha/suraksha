@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/three.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/aftc.preload.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/TweenMax.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/TimelineMax.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/Detector.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/GPUComputationRenderer.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/SimplexNoise.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/stats.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aftc.js@1.5.15/dist/aftc.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+		@import url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/styles.css');
+		html,
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    color: #FFFFFF;
+    background: #000000;
+    /* background: url(https://dev.aftc.io/JavaScript/sg1/images/bg.jpg) #000000; */
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+a {
+    color: #FFFF00;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+body {
+    margin: 0;
+}
+
+
+#end {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+}
+#end .inner {
+    position: relative;
+    display: block;
+    width: 882px;
+    height: 499px;
+    margin: auto;
+    text-align: center;
+    /* border: 1px solid #FFCC00; */
+}
+#end .image {
+    position: relative;
+    display: block;
+    width: 882px;
+    height: 499px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/Sci-Fi-Collage-Large.jpg);
+}
+#end .who {
+    position: relative;
+    display: block;
+    width: 882px;
+    height: 30px;
+    margin: auto;
+}
+
+#stargate {
+    position: relative;
+    width: 100%;
+}
+
+#stargate .inner {
+    z-index: 100;
+    position: relative;
+    width: 512px;
+    margin: auto;
+    padding-top: 20px;
+}
+
+#wormhole {
+    z-index: 300;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+#wormhole-overlay {
+    z-index: 301;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    opacity: 1;
+}
+
+
+#stargate .console-container {
+    z-index: 280;
+    position: relative;
+    width: 512px;
+    margin: auto;
+    color: #99FFFF;
+    text-shadow: 1px 1px 1px #000000;
+    font-size: 17px;
+    /* border: 1px solid RGBA(255,255,255,0.1); */
+  
+}
+
+#stargate .console-container .top-console {
+    position: absolute;
+    top: 290px;
+    left: 90px;
+    display: block;
+    width: 320px;
+    height: 90px;
+    margin: auto;
+    margin-top: 10px;
+    padding: 3px 10px;
+    text-shadow: 1px 1px 1px #000000;
+    font-size: 17px;
+    text-align: center;
+    background-repeat: no-repeat;
+    text-transform: UPPERCASE;
+/*   border: 1px solid #FFCC00; */
+  opacity: 0.7;
+}
+
+#stargate .console-container .left-console {
+    position: absolute;
+    display: block;
+    width: 159px;
+    height: 18px;
+    padding: 2px 20px;
+    text-shadow: 1px 1px 1px #000000;
+    font-size: 15px;
+    text-align: center;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/console_left.png);
+    background-repeat: no-repeat;
+}
+
+#stargate .console-container .left-console-1 {
+    left: -60px;
+    top: 310px;
+}
+
+#stargate .console-container .left-console-2 {
+    left: -40px;
+    top: 340px;
+}
+
+#stargate .console-container .left-console-3 {
+    left: -20px;
+    top: 370px;
+}
+
+#stargate .console-container .left-console-4 {
+    left: 0;
+    top: 400px;
+}
+
+#stargate .console-container .left-console-5 {
+    left: 20px;
+    top: 430px;
+}
+
+#stargate .console-container .left-console-6 {
+    left: 40px;
+    top: 460px;
+}
+
+#stargate .console-container .left-console-7 {
+    left: 60px;
+    top: 490px;
+}
+
+#stargate .gate {
+    position: absolute;
+    z-index: 80;
+    width: 512px;
+    height: 512px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/gate.png);
+}
+
+#stargate .ring-container {
+    position: absolute;
+    z-index: 90;
+    width: 512px;
+    height: 512px;
+    overflow: hidden;
+}
+
+#stargate .ring {
+    width: 512px;
+    height: 512px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/ring.png);
+}
+
+#stargate .bg-container {
+    z-index: 20;
+    position: absolute;
+    width: 512px;
+    height: 512px;
+    overflow: hidden;
+}
+
+#stargate .logo {
+    position: absolute;
+    left: 107px;
+    top: 170px;
+    width: 300px;
+    height: 116px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/logo.png);
+}
+
+
+
+#stargate .water {
+    z-index: 40;
+    position: absolute;
+    width: 512px;
+    height: 512px;
+    /* overflow: hidden; */
+    opacity: 0;
+}
+
+#stargate .fill {
+    position: absolute;
+    z-index: 45;
+    width: 512px;
+    height: 512px;
+    /* overflow: hidden; */
+    background: #FFFFFF;
+    opacity: 0;
+}
+
+
+
+
+#stargate .overlay-container {
+    z-index: 50;
+    position: absolute;
+    width: 512px;
+    height: 512px;
+    overflow: hidden;
+}
+
+#stargate .sam {
+    position: absolute;
+    left: 100px;
+    top: 60px;
+    display: none;
+    width: 327px;
+    height: 402px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/sam.png);
+    opacity: 0;
+}
+
+#stargate .click-to-enter {
+    position: absolute;
+    left: 100px;
+    top: 236px;
+    display: none;
+    width: 327px;
+    font-size: 28px;
+    text-shadow: 1px 1px 1px #000000;
+    text-align: center;
+    opacity: 0;
+}
+
+
+
+#stargate .lock-container {
+    position: absolute;
+    z-index: 91;
+    width: 512px;
+    height: 512px;
+    /* overflow: hidden; */
+}
+
+#stargate .lock {
+    position: absolute;
+    width: 159px;
+    height: 58px;
+    /* overflow: hidden; */
+}
+
+#stargate .lock1 {
+    left: 172px;
+    top: -15px;
+    transform: rotate(0deg);
+}
+
+#stargate .lock2 {
+    left: 1px;
+    top: 60px;
+    transform: rotate(-46deg);
+}
+
+#stargate .lock3 {
+    left: 350px;
+    top: 60px;
+    transform: rotate(46deg);
+}
+
+#stargate .lock4 {
+    left: -65px;
+    top: 225px;
+    transform: rotate(-90deg);
+}
+
+#stargate .lock5 {
+    left: 416px;
+    top: 225px;
+    transform: rotate(90deg);
+}
+
+#stargate .lock6 {
+    left: -3px;
+    top: 387px;
+    transform: rotate(-132deg);
+}
+
+#stargate .lock7 {
+    left: 354px;
+    top: 387px;
+    transform: rotate(132deg);
+}
+
+#stargate .lock {
+    position: absolute;
+}
+
+#stargate .lock .center-on {
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 165px;
+    height: 64px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/lock_center_on.png);
+    opacity: 0;
+}
+
+#stargate .lock .center-off {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 165px;
+    height: 64px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/lock_center_off.png);
+}
+
+#stargate .lock .base-on {
+    z-index: 2;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 165px;
+    height: 64px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/lock_base_on.png);
+    opacity: 0;
+}
+
+#stargate .lock .base-off {
+    z-index: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 165px;
+    height: 64px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/lock_base_off.png);
+}
+
+#stargate .dhd {
+    z-index: 220;
+    position: relative;
+    width: 512px;
+}
+
+#stargate .dhd .bg {
+    position: relative;
+    top: 380px;
+    width: 300px;
+    height: 300px;
+    margin: auto;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd_blank.png);
+}
+
+#stargate .dhd .btn-start {
+    z-index: 505;
+    position: relative;
+    top: 173px;
+    width: 113px;
+    height: 113px;
+    margin: auto;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd_btn_up.png);
+    cursor: pointer;
+}
+
+#stargate .dhd .btn-start:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd_btn_down.png);
+}
+
+#stargate .dhd .dhd-btn {
+    z-index: 103;
+    cursor: pointer;
+    transition-duration: 0.2s;
+}
+
+#stargate .dhd .btn1 {
+    position: absolute;
+    left: 199px;
+    top: 382px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c01.png);
+    width: 57px;
+    height: 55px;
+}
+
+#stargate .dhd .btn2 {
+    position: absolute;
+    left: 256px;
+    top: 382px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c02.png);
+    width: 56px;
+    height: 55px;
+}
+
+#stargate .dhd .btn3 {
+    position: absolute;
+    left: 295px;
+    top: 393px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c03.png);
+    width: 66px;
+    height: 66px;
+}
+
+#stargate .dhd .btn4 {
+    position: absolute;
+    left: 328px;
+    top: 426px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c04.png);
+    width: 65px;
+    height: 66px;
+}
+
+#stargate .dhd .btn5 {
+    position: absolute;
+    left: 350px;
+    top: 474px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c05.png);
+    width: 55px;
+    height: 57px;
+}
+
+#stargate .dhd .btn6 {
+    position: absolute;
+    left: 349px;
+    top: 530px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c06.png);
+    width: 56px;
+    height: 60px;
+}
+
+#stargate .dhd .btn7 {
+    position: absolute;
+    left: 328px;
+    top: 572px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c07.png);
+    width: 64px;
+    height: 63px;
+}
+
+#stargate .dhd .btn8 {
+    position: absolute;
+    left: 294px;
+    top: 603px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c08.png);
+    width: 67px;
+    height: 66px;
+}
+
+#stargate .dhd .btn9 {
+    position: absolute;
+    left: 256px;
+    top: 625px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c09.png);
+    width: 55px;
+    height: 54px;
+}
+
+#stargate .dhd .btn10 {
+    position: absolute;
+    left: 199px;
+    top: 624px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c10.png);
+    width: 57px;
+    height: 55px;
+}
+
+#stargate .dhd .btn11 {
+    position: absolute;
+    left: 151px;
+    top: 602px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c11.png);
+    width: 65px;
+    height: 65px;
+}
+
+#stargate .dhd .btn12 {
+    position: absolute;
+    left: 119px;
+    top: 570px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c12.png);
+    width: 65px;
+    height: 65px;
+}
+
+#stargate .dhd .btn13 {
+    position: absolute;
+    left: 107px;
+    top: 530px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c13.png);
+    width: 55px;
+    height: 58px;
+}
+
+#stargate .dhd .btn14 {
+    position: absolute;
+    left: 107px;
+    top: 471px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c14.png);
+    width: 56px;
+    height: 59px;
+}
+
+#stargate .dhd .btn15 {
+    position: absolute;
+    left: 119px;
+    top: 425px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c15.png);
+    width: 65px;
+    height: 64px;
+}
+
+#stargate .dhd .btn16 {
+    position: absolute;
+    left: 151px;
+    top: 393px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c16.png);
+    width: 66px;
+    height: 66px;
+}
+
+#stargate .dhd .btn17 {
+    position: absolute;
+    left: 220px;
+    top: 435px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c17.png);
+    width: 36px;
+    height: 43px;
+}
+
+#stargate .dhd .btn18 {
+    position: absolute;
+    left: 256px;
+    top: 435px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c18.png);
+    width: 35px;
+    height: 43px;
+}
+
+#stargate .dhd .btn19 {
+    position: absolute;
+    left: 277px;
+    top: 443px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c19.png);
+    width: 46px;
+    height: 47px;
+}
+
+#stargate .dhd .btn20 {
+    position: absolute;
+    left: 296px;
+    top: 464px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c20.png);
+    width: 47px;
+    height: 44px;
+}
+
+#stargate .dhd .btn21 {
+    position: absolute;
+    left: 308px;
+    top: 494px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c21.png);
+    width: 43px;
+    height: 36px;
+}
+
+#stargate .dhd .btn22 {
+    position: absolute;
+    left: 308px;
+    top: 530px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c22.png);
+    width: 43px;
+    height: 38px;
+}
+
+#stargate .dhd .btn23 {
+    position: absolute;
+    left: 297px;
+    top: 554px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c23.png);
+    width: 45px;
+    height: 42px;
+}
+
+#stargate .dhd .btn24 {
+    position: absolute;
+    left: 277px;
+    top: 571px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c24.png);
+    width: 45px;
+    height: 47px;
+}
+
+#stargate .dhd .btn25 {
+    position: absolute;
+    left: 256px;
+    top: 583px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c25.png);
+    width: 34px;
+    height: 42px;
+}
+
+#stargate .dhd .btn26 {
+    position: absolute;
+    left: 220px;
+    top: 583px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c26.png);
+    width: 36px;
+    height: 42px;
+}
+
+#stargate .dhd .btn27 {
+    position: absolute;
+    left: 190px;
+    top: 571px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c27.png);
+    width: 44px;
+    height: 46px;
+}
+
+#stargate .dhd .btn28 {
+    position: absolute;
+    left: 169px;
+    top: 552px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c28.png);
+    width: 47px;
+    height: 45px;
+}
+
+#stargate .dhd .btn29 {
+    position: absolute;
+    left: 161px;
+    top: 530px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c29.png);
+    width: 43px;
+    height: 37px;
+}
+
+#stargate .dhd .btn30 {
+    position: absolute;
+    left: 161px;
+    top: 493px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c30.png);
+    width: 43px;
+    height: 37px;
+}
+
+#stargate .dhd .btn31 {
+    position: absolute;
+    left: 170px;
+    top: 464px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c31.png);
+    width: 46px;
+    height: 44px;
+}
+
+#stargate .dhd .btn32 {
+    position: absolute;
+    left: 190px;
+    top: 443px;
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/up/c32.png);
+    width: 44px;
+    height: 47px;
+}
+
+#stargate .dhd .btn1:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c01.png);
+}
+
+#stargate .dhd .btn2:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c02.png);
+}
+
+#stargate .dhd .btn3:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c03.png);
+}
+
+#stargate .dhd .btn4:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c04.png);
+}
+
+#stargate .dhd .btn5:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c05.png);
+}
+
+#stargate .dhd .btn6:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c06.png);
+}
+
+#stargate .dhd .btn7:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c07.png);
+}
+
+#stargate .dhd .btn8:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c08.png);
+}
+
+#stargate .dhd .btn9:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c09.png);
+}
+
+#stargate .dhd .btn10:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c10.png);
+}
+
+#stargate .dhd .btn11:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c11.png);
+}
+
+#stargate .dhd .btn12:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c12.png);
+}
+
+#stargate .dhd .btn13:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c13.png);
+}
+
+#stargate .dhd .btn14:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c14.png);
+}
+
+#stargate .dhd .btn15:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c15.png);
+}
+
+#stargate .dhd .btn16:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c16.png);
+}
+
+#stargate .dhd .btn17:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c17.png);
+}
+
+#stargate .dhd .btn18:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c18.png);
+}
+
+#stargate .dhd .btn19:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c19.png);
+}
+
+#stargate .dhd .btn20:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c20.png);
+}
+
+#stargate .dhd .btn21:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c21.png);
+}
+
+#stargate .dhd .btn22:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c22.png);
+}
+
+#stargate .dhd .btn23:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c23.png);
+}
+
+#stargate .dhd .btn24:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c24.png);
+}
+
+#stargate .dhd .btn25:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c25.png);
+}
+
+#stargate .dhd .btn26:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c26.png);
+}
+
+#stargate .dhd .btn27:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c27.png);
+}
+
+#stargate .dhd .btn28:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c28.png);
+}
+
+#stargate .dhd .btn29:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c29.png);
+}
+
+#stargate .dhd .btn30:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c30.png);
+}
+
+#stargate .dhd .btn31:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c31.png);
+}
+
+#stargate .dhd .btn32:hover {
+    background: url(https://dev.aftc.io/JavaScript/sg1/images/dhd/down/c32.png);
+}
+	</style>
+</head>
+<body>
+<div id="end">
+        <div class="inner">
+            <div class="image"></div>
+            <div class="who">Darcey@aftc.io</div>
+        </div>
+        
+    </div>
+    <div id="stargate">
+        <div id="wormhole"></div>
+        <div id="wormhole-overlay"></div>
+        <div class="console-container">
+            <div class="top-console">LOADING</div>
+            <!-- <div class="left-console left-console-1">Chevron 1 LOCKED</div>
+            <div class="left-console left-console-2">Chevron 2 LOCKED</div>
+            <div class="left-console left-console-3">Chevron 3 LOCKED</div>
+            <div class="left-console left-console-4">Chevron 4 LOCKED</div>
+            <div class="left-console left-console-5">Chevron 5 LOCKED</div>
+            <div class="left-console left-console-6">Chevron 6 LOCKED</div>
+            <div class="left-console left-console-7">Chevron 7 LOCKED</div> -->
+        </div>
+
+        <div class="inner">
+            <div class="gate"></div>
+            <div class="ring-container">
+                <div class="ring"></div>
+            </div>
+            <div class="lock-container">
+                <div class="lock1 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+                <div class="lock2 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+                <div class="lock3 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+                <div class="lock4 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+                <div class="lock5 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+                <div class="lock6 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+                <div class="lock7 lock">
+                    <div class="center-on"></div>
+                    <div class="center-off"></div>
+                    <div class="base-on"></div>
+                    <div class="base-off"></div>
+                </div>
+            </div>
+            <div class="fill"></div>
+            <div class="water"></div>
+            <div class="bg-container">
+                <div class="logo"></div>
+            </div>
+            <div class="overlay-container">
+                <div class="sam"></div>
+                <div class="click-to-enter"><a href='javascript: stargate.enter();'>CLICK TO ENTER</a></div>
+            </div>
+
+
+            <div class="dhd">
+                    <div class="bg"></div>
+                    <div class="btn-start" onclick="stargate.dial()"></div>
+                    <div class="buttons">
+<div class='dhd-btn btn1' onclick='stargate.select(1)'></div>
+<div class='dhd-btn btn2' onclick='stargate.select(2)'></div>
+<div class='dhd-btn btn3' onclick='stargate.select(3)'></div>
+<div class='dhd-btn btn4' onclick='stargate.select(4)'></div>
+<div class='dhd-btn btn5' onclick='stargate.select(5)'></div>
+<div class='dhd-btn btn6' onclick='stargate.select(6)'></div>
+<div class='dhd-btn btn7' onclick='stargate.select(7)'></div>
+<div class='dhd-btn btn8' onclick='stargate.select(8)'></div>
+<div class='dhd-btn btn9' onclick='stargate.select(9)'></div>
+<div class='dhd-btn btn10' onclick='stargate.select(10)'></div>
+<div class='dhd-btn btn11' onclick='stargate.select(11)'></div>
+<div class='dhd-btn btn12' onclick='stargate.select(12)'></div>
+<div class='dhd-btn btn13' onclick='stargate.select(13)'></div>
+<div class='dhd-btn btn14' onclick='stargate.select(14)'></div>
+<div class='dhd-btn btn15' onclick='stargate.select(15)'></div>
+<div class='dhd-btn btn16' onclick='stargate.select(16)'></div>
+<div class='dhd-btn btn17' onclick='stargate.select(17)'></div>
+<div class='dhd-btn btn18' onclick='stargate.select(18)'></div>
+<div class='dhd-btn btn19' onclick='stargate.select(19)'></div>
+<div class='dhd-btn btn20' onclick='stargate.select(20)'></div>
+<div class='dhd-btn btn21' onclick='stargate.select(21)'></div>
+<div class='dhd-btn btn22' onclick='stargate.select(22)'></div>
+<div class='dhd-btn btn23' onclick='stargate.select(23)'></div>
+<div class='dhd-btn btn24' onclick='stargate.select(24)'></div>
+<div class='dhd-btn btn25' onclick='stargate.select(25)'></div>
+<div class='dhd-btn btn26' onclick='stargate.select(26)'></div>
+<div class='dhd-btn btn27' onclick='stargate.select(27)'></div>
+<div class='dhd-btn btn28' onclick='stargate.select(28)'></div>
+<div class='dhd-btn btn29' onclick='stargate.select(29)'></div>
+<div class='dhd-btn btn30' onclick='stargate.select(30)'></div>
+<div class='dhd-btn btn31' onclick='stargate.select(31)'></div>
+<div class='dhd-btn btn32' onclick='stargate.select(32)'></div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/three.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/aftc.preload.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/TweenMax.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/TimelineMax.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/Detector.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/GPUComputationRenderer.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/SimplexNoise.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/stats.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aftc.js@1.5.15/dist/aftc.min.js"></script>
+
+    <!-- This is the 'compute shader' for the water heightmap: -->
+    <script id="heightmapFragmentShader" type="x-shader/x-fragment">
+
+        #include <common>
+
+        uniform vec2 mousePos;
+        uniform float mouseSize;
+        uniform float viscosityConstant;
+
+        #define deltaTime ( 1.0 / 60.0 )
+        #define GRAVITY_CONSTANT ( resolution.x * deltaTime * 3.0 )
+
+        void main()	{
+
+            vec2 cellSize = 1.0 / resolution.xy;
+
+            vec2 uv = gl_FragCoord.xy * cellSize;
+
+            // heightmapValue.x == height
+            // heightmapValue.y == velocity
+            // heightmapValue.z, heightmapValue.w not used
+            vec4 heightmapValue = texture2D( heightmap, uv );
+
+            // Get neighbours
+            vec4 north = texture2D( heightmap, uv + vec2( 0.0, cellSize.y ) );
+            vec4 south = texture2D( heightmap, uv + vec2( 0.0, - cellSize.y ) );
+            vec4 east = texture2D( heightmap, uv + vec2( cellSize.x, 0.0 ) );
+            vec4 west = texture2D( heightmap, uv + vec2( - cellSize.x, 0.0 ) );
+
+            float sump = north.x + south.x + east.x + west.x - 4.0 * heightmapValue.x;
+
+            float accel = sump * GRAVITY_CONSTANT;
+
+            // Dynamics
+            heightmapValue.y += accel;
+            heightmapValue.x += heightmapValue.y * deltaTime;
+
+            // Viscosity
+            heightmapValue.x += sump * viscosityConstant;
+
+            // Mouse influence
+            float mousePhase = clamp( length( ( uv - vec2( 0.5 ) ) * BOUNDS - vec2( mousePos.x, - mousePos.y ) ) * PI / mouseSize, 0.0, PI );
+            heightmapValue.x += cos( mousePhase ) + 1.0;
+
+            gl_FragColor = heightmapValue;
+
+        }
+
+    </script>
+
+    <!-- This is just a smoothing 'compute shader' for using manually: -->
+    <script id="smoothFragmentShader" type="x-shader/x-fragment">
+
+        uniform sampler2D texture;
+
+        void main()	{
+
+            vec2 cellSize = 1.0 / resolution.xy;
+
+            vec2 uv = gl_FragCoord.xy * cellSize;
+
+            // Computes the mean of texel and 4 neighbours
+            vec4 textureValue = texture2D( texture, uv );
+            textureValue += texture2D( texture, uv + vec2( 0.0, cellSize.y ) );
+            textureValue += texture2D( texture, uv + vec2( 0.0, - cellSize.y ) );
+            textureValue += texture2D( texture, uv + vec2( cellSize.x, 0.0 ) );
+            textureValue += texture2D( texture, uv + vec2( - cellSize.x, 0.0 ) );
+
+            textureValue /= 5.0;
+
+            gl_FragColor = textureValue;
+
+        }
+
+    </script>
+
+    <!-- This is the water visualization shader, copied from the MeshPhongMaterial and modified: -->
+    <script id="waterVertexShader" type="x-shader/x-vertex">
+
+        uniform sampler2D heightmap;
+
+        #define PHONG
+
+        varying vec3 vViewPosition;
+
+        #ifndef FLAT_SHADED
+
+            varying vec3 vNormal;
+
+        #endif
+
+        #include <common>
+        #include <uv_pars_vertex>
+        #include <uv2_pars_vertex>
+        #include <displacementmap_pars_vertex>
+        #include <envmap_pars_vertex>
+        #include <color_pars_vertex>
+        #include <morphtarget_pars_vertex>
+        #include <skinning_pars_vertex>
+        #include <shadowmap_pars_vertex>
+        #include <logdepthbuf_pars_vertex>
+        #include <clipping_planes_pars_vertex>
+
+        void main() {
+
+            vec2 cellSize = vec2( 1.0 / WIDTH, 1.0 / WIDTH );
+
+            #include <uv_vertex>
+            #include <uv2_vertex>
+            #include <color_vertex>
+
+            // # include <beginnormal_vertex>
+            // Compute normal from heightmap
+            vec3 objectNormal = vec3(
+                ( texture2D( heightmap, uv + vec2( - cellSize.x, 0 ) ).x - texture2D( heightmap, uv + vec2( cellSize.x, 0 ) ).x ) * WIDTH / BOUNDS,
+                ( texture2D( heightmap, uv + vec2( 0, - cellSize.y ) ).x - texture2D( heightmap, uv + vec2( 0, cellSize.y ) ).x ) * WIDTH / BOUNDS,
+                1.0 );
+            //<beginnormal_vertex>
+
+            #include <morphnormal_vertex>
+            #include <skinbase_vertex>
+            #include <skinnormal_vertex>
+            #include <defaultnormal_vertex>
+
+        #ifndef FLAT_SHADED // Normal computed with derivatives when FLAT_SHADED
+
+            vNormal = normalize( transformedNormal );
+
+        #endif
+
+            //# include <begin_vertex>
+            float heightValue = texture2D( heightmap, uv ).x;
+            vec3 transformed = vec3( position.x, position.y, heightValue );
+            //<begin_vertex>
+
+            #include <morphtarget_vertex>
+            #include <skinning_vertex>
+            #include <displacementmap_vertex>
+            #include <project_vertex>
+            #include <logdepthbuf_vertex>
+            #include <clipping_planes_vertex>
+
+            vViewPosition = - mvPosition.xyz;
+
+            #include <worldpos_vertex>
+            #include <envmap_vertex>
+            #include <shadowmap_vertex>
+
+        }
+
+    </script>
+<script type="text/javascript">
+	// Author: Darcey@aftc.io
+// Requires: AFTC.JS, AFTC.Preload, ThreeJS & GSAP
+// npm i aftc.js (jquery replacement - faster, smaller, more useful and closer to native js)
+// threejs - a commonly used webgl wrapper (babylonjs is a good alternative for threejs)
+// gsap - tweening library
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+// Dev utility
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var aftcDebugPos = {
+    step: 1,
+    fastStep: 20
+}
+function debugPosition(element) {
+    var x = parseFloat(getComputedStyle(element).left);
+    var y = parseFloat(getComputedStyle(element).top);
+    var step = aftcDebugPos.step;
+    window.addEventListener("keydown", function (e) {
+        e.preventDefault();
+        // log(e);
+        switch (e.key) {
+            case "Shift":
+                if (step == 1) {
+                    step = aftcDebugPos.fastStep;
+                } else {
+                    step = aftcDebugPos.step;
+                }
+                break;
+
+            case "ArrowLeft":
+                x = parseFloat(getComputedStyle(element).left);
+                x -= step;
+                element.style.left = x + "px";
+                break;
+            case "ArrowRight":
+                x = parseFloat(getComputedStyle(element).left);
+                x += step;
+                element.style.left = x + "px";
+                break;
+            case "ArrowUp":
+                y = parseFloat(getComputedStyle(element).top);
+                y -= step;
+                element.style.top = y + "px";
+                break;
+            case "ArrowDown":
+                y = parseFloat(getComputedStyle(element).top);
+                y += step;
+                element.style.top = y + "px";
+                break;
+            case " ":
+                //log(x + " - " + y);
+                log("left: " + x + "px; top: " + y + "px;");
+                break;
+        }
+    });
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var Stargate = function () {
+    var params = {
+        selected: 1,
+        dialing: false,
+        dht: {
+            button: []
+        },
+        dom: {
+            stargate: false,
+            gate: false,
+            ring: false,
+            water: false,
+            fill: false,
+            console: false,
+            sam: false,
+            clickToEnter: false,
+          dhd: false,
+        },
+        audio: {
+            background: false,
+            water: false,
+        },
+        path: {
+            live: "https://dev.aftc.io/utils/GetCrossDomainImage.php?src=https://dev.aftc.io/JavaScript/sg1/",
+            dev: "./",
+            actual: false
+        },
+        preload: [
+            "images/dhd.png",
+            "images/dhd_blank.png",
+            "images/dhd_btn_down.png",
+            "images/dhd_btn_up.png",
+            "images/gate.png",
+            "images/lock_base_off.png",
+            "images/lock_base_on.png",
+            "images/lock_center_off.png",
+            "images/lock_center_on.png",
+            "images/logo.png",
+            "images/ring.png",
+            "sounds/bg2.mp3",
+            "sounds/open.mp3",
+            "sounds/rotate.mp3",
+            "sounds/dhd_select.mp3",
+            "sounds/fail.mp3",
+            "sounds/chevron_lock.mp3",
+            "sounds/water.mp3",
+            "sounds/through_the_wormhole.mp3"
+        ],
+        r: 0
+    };
+
+    var target = 0;
+    var activeSound;
+    var chevronsLocked = 0;
+    var o = {
+        v: 0
+    }
+
+    function init() {
+        params.dom.stargate = getElementById("stargate");
+        params.dom.gate = params.dom.stargate.getElementsByClassName("gate")[0];
+        params.dom.ring = params.dom.stargate.getElementsByClassName("ring")[0];
+        params.dom.water = params.dom.stargate.getElementsByClassName("water")[0];
+        params.dom.fill = params.dom.stargate.getElementsByClassName("fill")[0];
+        params.dom.console = params.dom.stargate.getElementsByClassName("top-console")[0];
+        params.dom.sam = params.dom.stargate.getElementsByClassName("sam")[0];
+        params.dom.clickToEnter = params.dom.stargate.getElementsByClassName("click-to-enter")[0];
+
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            params.path.actual = params.path.dev;
+        } else {
+            params.path.actual = params.path.live;
+        }
+        log("params.path.actual = " + params.path.actual);
+
+        params.dom.console.innerHTML = "Select a 7 Chevron gate address from the DHD below.";
+
+        // params.audio.background = playSound("bg2.mp3", 0.5, true);
+
+        preload();
+    }
+
+
+    function preload() {
+        var myPreloader = new AFTC.Preloader({
+            batchSize: 5,
+            onComplete: preloaderComplete,
+            onProgress: preloaderProgressHandler,
+            cache: false
+        });
+
+        for (var key in params.preload) {
+            var item = params.path.actual + params.preload[key];
+            myPreloader.add({ url: item });
+            log(item);
+        }
+        for (var i = 1; i <= 32; i++) {
+            var no = i;
+            if (i < 10) {
+                no = "0" + i;
+            }
+            var chevron = params.path.actual + "images/dhd/down/c" + no + ".png";
+            myPreloader.add({ url: chevron });
+          myPreloader.add({url:"https://dev.aftc.io/JavaScript/sg1/sounds/through_the_wormhole.mp3"});
+        }
+        myPreloader.start();
+    }
+
+    function preloaderComplete() {
+        log("preloaderComplete()");
+    }
+
+    function preloaderProgressHandler(o) {
+        // log("preloaderProgressHandler(o): " + o.percentLoaded);
+    }
+
+    function openWormHole() {
+        // log("openWormHole()");
+        spinRing();
+    }
+
+    function spinRing() {
+        var newTarget = getRandom(100, 360);
+        var moveRange = Math.abs(target - newTarget);
+        if (moveRange < 100) {
+            spinRing();
+        } else {
+            // log("spinRing(): " + moveRange);
+            params.dom.console.innerHTML = "Dialing chevron " + (chevronsLocked+1) + "...";
+            params.dom.console.innerHTML = "Dialing chevron " + (chevronsLocked + 1) + "...";
+            target = newTarget;
+            activeSound = playSound("rotate.mp3");
+            TweenMax.to(params.dom.ring, 1.2, { rotation: target, onComplete: spinRingComplete });
+        }
+
+    }
+
+    function spinRingComplete() {
+        chevronsLocked++;
+        params.dom.console.innerHTML = "Attempting to lock chevron " + (chevronsLocked) + "...";
+        // log("spinRingComplete(): chevronsLocked = " + chevronsLocked);
+        activeSound.pause();
+        activeSound = playSound("chevron_lock.mp3");
+        var o = { v: 0 };
+        TweenMax.to(o, 0.9, {
+            v: 1, onComplete: function () {
+                params.dom.console.innerHTML = "Chevron " + (chevronsLocked) + " LOCKED!";
+            }
+        })
+
+        var lock = getElementById("stargate").getElementsByClassName("lock" + chevronsLocked)[0];
+        var base_off = lock.getElementsByClassName("base-off")[0];
+        var base_on = lock.getElementsByClassName("base-on")[0];
+        var center_off = lock.getElementsByClassName("center-off")[0];
+        var center_on = lock.getElementsByClassName("center-on")[0];
+
+        TweenMax.set(base_off, { opacity: 0 });
+        TweenMax.set(base_on, { opacity: 1 });
+        var t = new TimelineMax();
+        t.add(TweenMax.to(center_off, 0.7, { y: -6 }));
+        t.add(TweenMax.to(center_off, 0.2, { y: 0 }));
+        t.add(TweenMax.to(center_on, 0.2, { y: 0, opacity: 1 }));
+
+        activeSound.addEventListener('ended', function () {
+            // log("chevronsLocked = " + chevronsLocked);
+            if (chevronsLocked >= 7) {
+                activeSound = playSound("open.mp3");
+                params.dom.fill.style.opacity = 1;
+                params.dom.water.style.opacity = 1;
+                TweenMax.to(params.dom.fill, 1.5, { opacity: 0 });
+                params.audio.water = playSound("water.mp3", 1, true);
+                params.dom.console.innerHTML = "Wormhole established and locked! CLICK TO ENTER";
+
+                params.dom.sam.style.display = "block";
+                var t2 = new TimelineMax({ repeat: -1 });
+                t2.set(params.dom.sam, { opacity: 0 });
+                t2.to(params.dom.sam, 5, { delay: 3, opacity: 0.2 });
+                t2.to(params.dom.sam, 5, { delay: 3, opacity: 0 });
+
+                params.dom.clickToEnter.style.display = "block";
+                var t3 = new TimelineMax({ repeat: -1 });
+                t3.set(params.dom.clickToEnter, { opacity: 0 });
+                t3.to(params.dom.clickToEnter, 1, { delay: 3, opacity: 1 });
+                t3.to(params.dom.clickToEnter, 1, { delay: 1, opacity: 0 });
+
+                setupClickToEnter();
+
+            } else {
+                spinRing();
+            }
+        }, false);
+    }
+
+    function playSound(file, vol, loop, onComplete) {
+        var path = params.path.actual + "sounds/" + file;
+        // log("path = " + path);
+        var sound = new Audio(path);
+        // log(sound);
+        if (vol) {
+            sound.volume = 0.3;
+        }
+        if (loop) {
+            sound.addEventListener('ended', function () {
+                this.currentTime = 0;
+                this.play();
+            }, false);
+        }
+
+        if (onComplete) {
+            sound.addEventListener('ended', function () {
+                onComplete();
+            }, false);
+        }
+        sound.play();
+        return sound;
+    }
+
+
+    function enterWormhole() {
+        log("Stargate.enterWormhole()");
+        try {
+            params.dom.stargate.removeEventListener("click", enterWormhole);
+        } catch(e) {}
+
+        if (params.audio.water){
+            params.audio.water.pause();
+        }
+
+        wormHole.start();
+    }
+
+
+    function setupClickToEnter(){
+        params.dom.console.innerHTML = "";
+        params.dom.stargate.addEventListener("click", enterWormhole);
+        params.dom.stargate.classList.add("pointer");
+    }
+
+
+
+    // Constructor simulation
+    init();
+
+    // PUBLIC
+    this.select = function (no) {
+      log(no);
+        // prevent selection when dialing
+        if (params.dialing) {
+            return;
+        }
+        // only allow 7 chevron addresses
+        if (params.selected > 7) {
+            return;
+        }
+        // Prevent same button click
+        if (params.dht.button[no]) {
+            return;
+        }
+        params.selected++;
+        params.dht.button[no] = true;
+
+        playSound("dhd_select.mp3");
+        var element = getElementById("stargate").getElementsByClassName("btn" + no)[0];
+        if (parseInt(no) < 10) {
+            no = "0" + no;
+        }
+        var bg = "url(" + params.path.actual + "images/dhd/down/c" + no + ".png)";
+        element.style.backgroundImage = bg;
+
+        if (params.selected < 8) {
+            params.dom.console.innerHTML = "Chevron " + (params.selected - 1) + " of 7 selected...";
+        } else {
+            params.dom.console.innerHTML = "Press the big red button <br>to start dialing!";
+        }
+    }
+
+    this.dial = function () {
+        log("dial()");
+        // prevent selection when dialing
+        if (params.dialing) {
+            return;
+        }
+
+        params.dom.console.innerHTML = "Dialing your 7 chevron gate address!";
+
+        // only allow 7 chevron addresses
+        if (params.selected < 8) {
+            playSound("fail.mp3");
+            return;
+        }
+        log("dial()");
+        playSound("dhd_select.mp3");
+        params.dialing = true;
+        openWormHole();
+    }
+
+    this.enter = function() {
+        enterWormhole();
+    }
+
+    this.testClickToEnter = function(){
+        setupClickToEnter();
+    }
+};
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var EventHorizon = function(){
+
+    if (!Detector.webgl) Detector.addGetWebGLMessage();
+
+    // Texture width for simulation
+    var WIDTH = 128;
+    var NUM_TEXELS = WIDTH * WIDTH;
+
+    // Water size in system units
+    var BOUNDS = 512;
+    var BOUNDS_HALF = BOUNDS * 0.5;
+
+    var container, stats;
+    var camera, scene, renderer, controls;
+    var mouseMoved = false;
+    var mouseCoords = new THREE.Vector2();
+    var raycaster = new THREE.Raycaster();
+
+    var waterMesh;
+    var meshRay;
+    var gpuCompute;
+    var heightmapVariable;
+    var waterUniforms;
+    var smoothShader;
+
+    var simplex = new SimplexNoise();
+
+    var windowHalfX = window.innerWidth / 2;
+    var windowHalfY = window.innerHeight / 2;
+
+    var options = '';
+    for (var i = 4; i < 10; i++) {
+        var j = Math.pow(2, i);
+        options += '<a href="#" onclick="return change(' + j + ')">' + j + 'x' + j + '</a> ';
+    }
+
+    function init() {
+        container = getElementById("stargate").getElementsByClassName("water")[0];
+
+        camera = new THREE.PerspectiveCamera(75, 1, 1, 3000);
+        camera.position.set(0, 0, 400);
+
+        scene = new THREE.Scene();
+
+        var sun = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+        sun.position.set(0, 0, 175);
+        scene.add(sun);
+
+        var sun2 = new THREE.DirectionalLight(0x40A040, 1.6);
+        sun2.position.set(-100, 350, -200);
+        scene.add(sun2);
+
+        renderer = new THREE.WebGLRenderer();
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // renderer.setSize( window.innerWidth, window.innerHeight );
+        renderer.setSize(512, 512);
+        container.appendChild(renderer.domElement);
+
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            stats = new Stats();
+            container.appendChild(stats.dom);
+        }
+
+        var effectController = {
+            mouseSize: 50.0,
+            viscosity: 0.01
+        };
+
+        initWater();
+        animate();
+    }
+
+    function initWater() {
+        var materialColor = 0x003399;
+        var geometry = new THREE.PlaneBufferGeometry(BOUNDS, BOUNDS, WIDTH - 1, WIDTH - 1);
+        // material: make a ShaderMaterial clone of MeshPhongMaterial, with customized vertex shader
+        var material = new THREE.ShaderMaterial({
+            uniforms: THREE.UniformsUtils.merge([
+                THREE.ShaderLib['phong'].uniforms,
+                {
+                    heightmap: { value: null }
+                }
+            ]),
+            vertexShader: document.getElementById('waterVertexShader').textContent,
+            fragmentShader: THREE.ShaderChunk['meshphong_frag']
+        });
+
+        material.lights = true;
+
+        // Material attributes from MeshPhongMaterial
+        material.color = new THREE.Color(materialColor);
+        material.specular = new THREE.Color(0xFFFFFF);
+        material.shininess = 100;
+
+        // Sets the uniforms with the material values
+        material.uniforms.diffuse.value = material.color;
+        material.uniforms.specular.value = material.specular;
+        material.uniforms.shininess.value = Math.max(material.shininess, 1e-4);
+        material.uniforms.opacity.value = material.opacity;
+
+        // Defines
+        material.defines.WIDTH = WIDTH.toFixed(1);
+        material.defines.BOUNDS = BOUNDS.toFixed(1);
+
+        waterUniforms = material.uniforms;
+
+        waterMesh = new THREE.Mesh(geometry, material);
+        // waterMesh.rotation.x = - Math.PI / 2;
+        // waterMesh.rotation.x = degToRad(0);
+        waterMesh.matrixAutoUpdate = false;
+        waterMesh.updateMatrix();
+        scene.add(waterMesh);
+
+        // Creates the gpu computation class and sets it up
+        gpuCompute = new GPUComputationRenderer(WIDTH, WIDTH, renderer);
+        var heightmap0 = gpuCompute.createTexture();
+        fillTexture(heightmap0);
+        heightmapVariable = gpuCompute.addVariable("heightmap", document.getElementById('heightmapFragmentShader').textContent, heightmap0);
+        gpuCompute.setVariableDependencies(heightmapVariable, [heightmapVariable]);
+        heightmapVariable.material.defines.BOUNDS = BOUNDS.toFixed(1);
+
+        var error = gpuCompute.init();
+        if (error !== null) {
+            console.error(error);
+        }
+
+        // Create compute shader to smooth the water surface and velocity
+        smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader').textContent, { texture: { value: null } });
+
+    }
+
+    function fillTexture(texture) {
+        var waterMaxHeight = 20;
+
+        function noise(x, y, z) {
+            var multR = waterMaxHeight;
+            var mult = 0.025;
+            var r = 0;
+            for (var i = 0; i < 15; i++) {
+                r += multR * simplex.noise(x * mult, y * mult);
+                multR *= 0.53 + 0.025 * i;
+                mult *= 1.25;
+            }
+            return r;
+        }
+
+        var pixels = texture.image.data;
+
+        var p = 0;
+        for (var j = 0; j < WIDTH; j++) {
+            for (var i = 0; i < WIDTH; i++) {
+
+                var x = i * 128 / WIDTH;
+                var y = j * 128 / WIDTH;
+
+                pixels[p + 0] = noise(x, y, 123.4);
+                pixels[p + 1] = 0;
+                pixels[p + 2] = 0;
+                pixels[p + 3] = 1;
+
+                p += 4;
+            }
+        }
+    }
+
+    function smoothWater() {
+        var currentRenderTarget = gpuCompute.getCurrentRenderTarget(heightmapVariable);
+        var alternateRenderTarget = gpuCompute.getAlternateRenderTarget(heightmapVariable);
+        for (var i = 0; i < 10; i++) {
+            smoothShader.uniforms.texture.value = currentRenderTarget.texture;
+            gpuCompute.doRenderTarget(smoothShader, alternateRenderTarget);
+            smoothShader.uniforms.texture.value = alternateRenderTarget.texture;
+            gpuCompute.doRenderTarget(smoothShader, currentRenderTarget);
+        }
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        render();
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            stats.update();
+        }
+    }
+
+    function render() {
+        gpuCompute.compute();
+        waterUniforms.heightmap.value = gpuCompute.getCurrentRenderTarget(heightmapVariable).texture;
+        renderer.render(scene, camera);
+    }
+
+    init();
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+// Author: Darcey@AllForTheCode.co.uk
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+var SimpleWormHole = function () {
+    var params = {
+        path: {
+            live: "https://dev.aftc.io/JavaScript/sg1/",
+            dev: "./",
+            actual: false
+        },
+        textures: {
+            wormhole: false,
+            cubeMap: [
+                'neb_px.jpg',
+                'neb_nx.jpg',
+                'neb_py.jpg',
+                'neb_ny.jpg',
+                'neb_pz.jpg',
+                'neb_nz.jpg'
+            ]
+        },
+        three: {
+            renderer: false,
+            scene: false,
+            camera: false,
+        },
+        dom: {
+            container: false,
+            overlay: false,
+        },
+        tunnelSpline: false,
+        tunnelGeom: false,
+        tunnelMaterial: false,
+        tunnelMesh: false,
+        zSpeed: 0.0010,
+        tubePos: 0,
+        rx: 0,
+        lookAhead: 10,
+        t: 0,
+        started: false,
+        loaded: false,
+        outAnimStarted: false
+    };
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function init() {
+        log("SimpleWormHole.init()");
+
+        params.dom.overlay = getElementById("wormhole-overlay");
+
+        var spaceURL = "";
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            params.path.actual = params.path.dev;
+            spaceURL = params.path.actual+"images/space01.jpg";
+        } else {
+            params.path.actual = params.path.live;
+            spaceURL = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/space01.jpg";
+        }
+
+
+        var loader = new THREE.TextureLoader();
+        loader.crossOrigin = "Anonymous";
+        loader.load(
+            spaceURL,
+            function (texture) {
+                params.textures.wormhole = texture;
+                setupThreeJS();
+            }
+        );
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function setupThreeJS() {
+        log("SimpleWormHole.setupThreeJS()");
+        // Creating the renderer
+        params.three.renderer = new THREE.WebGLRenderer({ alpha: false });
+        params.three.renderer.setClearColor(0x000000, 0);
+        params.three.renderer.setSize(window.innerWidth, window.innerHeight);
+        params.dom.container = getElementById("wormhole");
+        params.dom.container.append(params.three.renderer.domElement);
+
+        // Creating the scene
+        params.three.scene = new THREE.Scene();
+        // Setting up the camera
+        params.three.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
+
+        // Creating the tunnel and adding it to the scene
+        params.tunnelGeom = buildTunnerGeometry(40, 512, 30, 80);
+
+        // Create textured tunnel mesh
+        params.tunnelMaterial = new THREE.MeshBasicMaterial({
+            transparent: true,
+            opacity: 0.7,
+            side: THREE.DoubleSide,
+            wireframe: false,
+            map: params.textures.wormhole
+        });
+
+        params.tunnelMesh = new THREE.Mesh(params.tunnelGeom, params.tunnelMaterial);
+        params.three.scene.add(params.tunnelMesh);
+
+        setupCubeMap();
+
+        resizeHandler();
+
+        params.loaded = true;
+        // Auto run if started when load hadn't completed yet
+        if (params.started){
+            startIntroAnim();
+        }
+    }
+    // - - - - - - - - - - - - - - -
+
+    // - - - - - - - - - - - - - - -
+    function setupCubeMap(){
+        // I pref season 8 wormhole
+        //log("SimpleWormHole.setupCubeMap(): params.path.actual = " + params.path.actual);
+        var fileType = ".jpg";
+        var urls;
+        if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            urls = [
+                params.path.actual + 'images/neb_px' + ".jpg",
+                params.path.actual + 'images/neb_nx' + ".jpg",
+                params.path.actual + 'images/neb_py' + ".jpg",
+                params.path.actual + 'images/neb_ny' + ".jpg",
+                params.path.actual + 'images/neb_pz' + ".jpg",
+                params.path.actual + 'images/neb_nz' + ".jpg"
+            ];
+        } else {
+            urls = [
+                'https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/neb_px.jpg',
+                'https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/neb_nx.jpg',
+                'https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/neb_py.jpg',
+                'https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/neb_ny.jpg',
+                'https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/neb_pz.jpg',
+                'https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/neb_nz.jpg'
+            ];
+        }
+        
+
+        params.three.scene.background = new THREE.CubeTextureLoader()
+        
+        .load(
+            urls,
+            function(){
+                log("LOADED");
+            },
+            function(){
+                log("PROGRESS");
+            },
+            function(){
+                log("ERROR");
+            },
+         );
+
+        //var textureCube = THREE.ImageUtils.loadTextureCube(urls, THREE.CubeRefractionMapping);       
+
+        // var shader = THREE.ShaderLib["cube"];
+        // shader.uniforms.tCube.value = textureCube;
+
+        // var material = new THREE.ShaderMaterial({
+        //     fragmentShader: shader.fragmentShader,
+        //     vertexShader: shader.vertexShader,
+        //     uniforms: shader.uniforms,
+        //     depthWrite: false,
+        //     side: THREE.BackSide
+        // });
+
+        // var mesh = new THREE.Mesh(new THREE.BoxGeometry(50000, 50000, 50000), material);
+        // params.three.scene.add(mesh);
+
+        // var geometry = new THREE.SphereGeometry( 5000, 32, 32 );
+        // var material = new THREE.MeshBasicMaterial( {color: 0xffff00,side: THREE.BackSide} );
+        // var sphere = new THREE.Mesh( geometry, material );
+        // params.three.scene.add( sphere )
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function buildTunnerGeometry(points, segments, radius, radiusSegments) {
+        // Array of spline points
+        var splinePoints = [];
+        var previousPoint = new THREE.Vector3(0, 0, 0);
+        for (var i = 0; i < points; i++) {
+            var rX = previousPoint.x + 5 + Math.round(Math.random() * 500);
+            var rY = previousPoint.y + 5 + Math.round(Math.random() * 500);
+            var rZ = previousPoint.z + 5 + Math.round(Math.random() * 500);
+
+            previousPoint.x = rX;
+            previousPoint.y = rY;
+            previousPoint.z = rZ;
+
+            splinePoints.push(new THREE.Vector3(rX, rY, rZ));
+        }
+        params.tunnelSpline = new THREE.CatmullRomCurve3(splinePoints); // SplineCurve3
+        var geom = new THREE.TubeGeometry(params.tunnelSpline, segments, radius, radiusSegments, false);
+        return geom;
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function render() {
+        params.t += 0.01;
+
+        var end = 1 - (params.zSpeed * params.lookAhead);
+        var closeToEnd = 1 - (params.zSpeed * (params.lookAhead*20));
+
+        // if  (params.tubePos >= closeToEnd && !params.outAnimStarted){
+        //     params.outAnimStarted = true;
+        //     // startEndAnim();
+        // }
+
+        if (params.tubePos >= end) {
+            log("Wormhole limit reached!");
+            return;
+        }
+
+        var pos1 = params.tunnelSpline.getPointAt(params.tubePos);
+        var pos2 = params.tunnelSpline.getPointAt(params.tubePos + (params.zSpeed * params.lookAhead));
+        params.three.camera.position.set(pos1.x, pos1.y, pos1.z);
+        params.three.camera.lookAt(pos2);
+
+        params.rx = Math.sin(params.t) * 15;
+        params.three.camera.rotation.z = degToRad(params.rx);
+        params.tubePos += params.zSpeed;
+        requestAnimationFrame(render);
+        params.three.renderer.render(params.three.scene, params.three.camera);
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function startEndAnim(){
+        if (params.outAnimStarted){
+            return;
+        }
+        params.outAnimStarted = true;
+        log("SimpleWormHole.startEndAnim()");
+
+        params.dom.stargate = getElementById("stargate");
+        params.dom.gateunderlay = params.dom.stargate.getElementsByClassName("bg-container")[0];
+        params.dom.gateoverlay = params.dom.stargate.getElementsByClassName("overlay-container")[0];
+        params.dom.gate = params.dom.stargate.getElementsByClassName("gate")[0];
+        params.dom.dhd = params.dom.stargate.getElementsByClassName("dhd")[0];
+        params.dom.lockcontainer = params.dom.stargate.getElementsByClassName("lock-container")[0];
+        params.dom.ring = params.dom.stargate.getElementsByClassName("ring-container")[0];
+        params.dom.water = params.dom.stargate.getElementsByClassName("water")[0];
+        params.dom.fill = params.dom.stargate.getElementsByClassName("fill")[0];
+        params.dom.console = params.dom.stargate.getElementsByClassName("top-console")[0];
+
+        var tEnd = new TimelineMax({ });
+        tEnd.add(TweenMax.to(params.dom.overlay, 0.3, { delay: 0.1, opacity: 1 }));
+        tEnd.set(getElementById("end"),{display:"block"});
+        tEnd.set(params.dom.gateunderlay,{display:"none"});
+        tEnd.set(params.dom.gateoverlay,{display:"none"});
+        tEnd.set(params.dom.dhd,{display:"none"});
+        tEnd.set(params.dom.gate,{display:"none"});
+        tEnd.set(params.dom.ring,{display:"none"});
+        tEnd.set(params.dom.lockcontainer,{display:"none"});
+        tEnd.set(params.dom.water,{display:"none"});
+        tEnd.set(params.dom.fill,{display:"none"});
+        tEnd.set(params.dom.console,{display:"none"});
+        tEnd.set(params.dom.container,{display:"none"});
+        tEnd.add(TweenMax.to(params.dom.overlay, 0.3, { delay: 1.5, opacity: 0 }));
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function resizeHandler() {
+        params.three.renderer.setSize(window.innerWidth, window.innerHeight);
+        params.three.camera.aspect = window.innerWidth / window.innerHeight;
+        params.three.camera.updateProjectionMatrix();
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // - - - - - - - - - - - - - - -
+    function startIntroAnim(){
+        render();
+        params.dom.overlay.style.display = "block";
+        params.dom.container.style.display = "block";
+        TweenMax.set(params.dom.overlay,{opacity:1});
+        TweenMax.set(params.dom.container,{opacity:1});
+        TweenMax.to(params.dom.overlay,0.5,{delay: 0.5, opacity:0});
+
+        var path = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/154052/through_the_wormhole.mp3";
+        var sound = new Audio(path);
+        sound.volume = 0.7;
+        // sound.addEventListener('ended', function () {
+        //     startEndAnim();
+        // }, false);
+        sound.addEventListener("timeupdate",function(e){
+            // log(sound.currentTime);
+            if (sound.currentTime >= 11){
+                startEndAnim();
+            }
+        });
+        sound.play();
+
+        // var sound      = document.createElement('audio');
+        // sound.id       = 'audio-player';
+        // sound.controls = 'controls';
+        // sound.src      = path;
+        // sound.type     = 'audio/mpeg';
+        // sound.addEventListener("timeupdate",function(e){
+        //     log(sound.currentTime);
+        //     if (sound.currentTime >= 11){
+        //         startEndAnim();
+        //     }
+        // });
+        // document.body.appendChild(sound);
+        // sound.play();
+    }
+    // - - - - - - - - - - - - - - -
+
+
+    // simulate constructor
+    init();
+    // - - - - - - - - - - - - - - -
+
+
+    // Public
+    this.start = function () {
+        params.started = true;
+        if (params.loaded){
+            startIntroAnim();
+        }
+    }
+    // - - - - - - - - - - - - - - -
+}
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+var stargate,wormhole;
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+onReady(function () {
+    new EventHorizon();
+    stargate = new Stargate();
+    wormHole = new SimpleWormHole();
+    // debugPosition(getElementById("stargate").getElementsByClassName("lock7")[0]);
+});
+// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+</script>
+</body>
+</html>

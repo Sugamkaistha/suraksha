@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+		@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+		@import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');
+		@import url('https://codepen.io/U-ways/pen/qNLZrg.css');
+		/* Color Scheme
+================================================================================
+Main Colors:
+#c5dec2 - #95a893
+#3e5050 - #3a4949
+#263331 - #333
+
+Matching R&G:
+#549042 - #8e0000
+*//* App
+==============================================================================*/
+#app-con {
+  align-self: center;
+  justify-content: flex-start;
+  width: 96vw;
+  max-width: 900px;
+  color: #c5dec2;
+  background-color: transparent;
+  overflow-y: hidden;
+}
+
+#topBar-con {
+  height: 12vh;
+  max-height: 60px;
+  min-height: 50px;
+  justify-content: space-between;
+  background-color: #263331;
+  padding: 10px 3% 10px 3%;
+} #topBar-con p {
+  font-size: 1.6em;
+} #topBar-con > div {
+  justify-content: flex-end;
+  width: 50%;
+} #topBar-con > div i {
+  margin-left: 5%;
+}
+
+.error {
+  font-size: 1em !important;
+  animation: blink-animation .6s steps(5, start) 5;
+  -webkit-animation: blink-animation .6s steps(5, start) 5;
+} .error > a {
+  color: #c5dec2;
+}
+
+@keyframes blink-animation {
+  to { visibility: hidden; } }
+@-webkit-keyframes blink-animation {
+  to { visibility: hidden; } }
+
+#weather-con {
+  height: 55vh;
+  max-height: 300px;
+  min-height: 250px;
+  background-color: #3C4B4B;
+  text-align: center;
+}
+
+#weatherDetails-con {
+  flex: 2;
+  max-width: 180px;
+  justify-content: space-around;
+  padding: .5vh 0 .5vh 2%;
+  height: inherit;
+  max-height: inherit;
+  min-height: inherit;
+  background-color: #374545;
+} #weatherDetails-con p,
+  #weatherDetails-con i {
+  font-size: 1.9em;
+}
+
+#pressure,
+#humidity,
+#wind {
+  align-items: flex-end;
+  justify-content: space-around;
+} #pressure > div,
+  #humidity > div,
+  #wind > div {
+  width: 50%;
+} #pressure > i,
+  #humidity > i,
+  #wind > i {
+  width: 40%;
+}
+
+#humidity {
+  align-items: center;
+}
+
+
+#weatherTemp-con {
+  flex: 3;
+  justify-content: space-around;
+  height: inherit;
+  max-height: inherit;
+  min-height: inherit;
+}
+
+#weatherTemp {
+  flex: 4;
+  height: 65%;
+  margin-top: 4%;
+  font-size: 7em;
+}
+
+#unitSwitchBtn {
+  flex: 3.3;
+  justify-content: space-around;
+  width: 60%;
+  height: 35%;
+  font-family: sans-serif;
+  padding: 0 10px 0 10px;
+  font-size: 3.4em;
+  border: none;
+  outline: none;
+  background-color: #374545;
+  background-color: transparent;
+  color: #c5dec2;
+} #unitSwitchBtn i {
+  font-size: 1.3em;
+  color: #263331;
+} #unitSwitchBtn span {
+  padding-bottom: 10px;
+  padding-left: 2.5%;
+} #unitSwitchBtn .activeUnit {
+  color: #c5dec2;
+}
+
+#weatherDisplay-con {
+  flex: 3;
+  justify-content: space-around;
+  height: inherit;
+  max-height: inherit;
+  min-height: inherit;
+  padding-right: 2%;
+}
+
+#weatherIcon {
+  flex: 4.5;
+  height: 65%;
+  margin-top: 10%;
+  font-size: 6.5em;
+}
+
+#weatherSum {
+  flex: 3;
+  height: 35%;
+  font-size: 2em;
+  margin-bottom: 5%;
+  text-transform: capitalize;
+}
+
+	</style>
+</head>
+<body>
+<div id="container">
+  <header class="grid cols-6" id="header">
+    <section id="proj-heading">
+      <h1>Weather Application</h1>
+    </section>
+    <details id="proj-details">
+      <summary>Project Info</summary>
+      <section class="grid cols-2 rows-2" id="details-body">
+        <div class="details-column"></div>
+        <div class="details-column"></div>
+      </section>
+    </details>
+  </header>
+  <main class="flex-c" id="app">
+    <div class="flex-c" id="app-con">
+      <section class="flex-r" id="topBar-con">
+        <p id="msgBox">Today</p>
+        <div class="flex-r">
+          <p id="location">Retrieving Location</p>
+          <i class="fa fa-map-marker fa-2x"></i>
+        </div>
+      </section>
+      <section class="flex-r" id="weather-con">
+        <section class="flex-c" id="weatherDetails-con">
+          <div class="flex-r" id="pressure">
+            <div class="flex-r">
+              <p>0.00</p>
+              <span>PSI</span>
+            </div>
+            <i class="wi wi-barometer" style="font-size: 2em;"></i>
+          </div>
+          <div class="flex-r" id="wind">
+            <div class="flex-r">
+              <p>0.0</p>
+              <span>000</span>
+              <i class="wi wi-degrees"></i>
+            </div>
+            <i class="wi wi-strong-wind" style="font-size: 1.7em;"></i>
+          </div>
+          <div class="flex-r" id="humidity">
+            <div class="flex-r">
+              <p>00</p>
+              <span>%</span>
+            </div>
+            <i class="wi wi-humidity" style="font-size: 1.7em;"></i>
+          </div>
+        </section>
+        <section class="flex-c" id="weatherTemp-con">
+          <p id="weatherTemp">
+            <span>00</span>
+            <i class="wi wi-celsius"></i>
+          </p>
+          <button class="flex-r" id="unitSwitchBtn">
+            <i class="wi wi-celsius activeUnit"></i>
+            <span>l</span>
+            <i class="wi wi-fahrenheit"></i>
+          </button>
+        </section>
+        <section class="flex-c" id="weatherDisplay-con">
+          <i class="wi wi-na" id="weatherIcon"></i>
+          <p class="flex-r" id="weatherSum">Loading</p>
+        </section>
+      </section>
+    </div>
+  </main>
+  <footer id="footer">
+    <p>
+      Last Updated:
+      <time datetime="2017-05-03">> 03/05/2017</time>
+      \&nbsp | &nbsp
+      <a href="https://codepen.io/U-ways/" target="_blank">
+        <i aria-hidden="true" class="fa fa-codepen">></i>
+        U-ways
+      </a>
+    </p>
+  </footer>
+</div>
+<script src="vhttps://codepen.io/U-ways/pen/qNLZrg.jss"></script>
+<script type="text/javascript">
+	/*jshint esversion: 6*/
+
+/** UPDATE
+ * Due to the unstable and free APIs that I am using, the application might 
+ * be slow to get the data.
+ *
+ * Local Weather Application:
+ *
+ * Get the User location using IP-API, then use the location as an argument
+ * To pass to the Open-Weather API to get the user local weather information.
+ * IP-API:            http://ip-api.com/docs/api:json
+ * Open-Weather API:  https://openweathermap.org/current
+ */
+
+/* Initial selector/variable assignments
+==============================================================================*/
+const msgBox = document.querySelector("#msgBox");
+const userLocation = document.querySelector("#location");
+
+const pressure = document.querySelector("#pressure > div > p");
+const humidity = document.querySelector("#humidity > div > p");
+const wind = [
+  document.querySelector("#wind > div > p"),
+  document.querySelector("#wind > div > span")
+];
+
+const weatherTemp = [
+  document.querySelector("#weatherTemp > span"),
+  document.querySelector("#weatherTemp > i")
+];
+const unitSwitchBtn = [
+  document.querySelector("#unitSwitchBtn"),
+  document.querySelector("#unitSwitchBtn > i:nth-of-type(1)"),
+  document.querySelector("#unitSwitchBtn > i:nth-of-type(2)")
+];
+
+const weatherIcon = document.querySelector("#weatherIcon");
+const weatherSum = document.querySelector("#weatherSum");
+
+const xhr = new XMLHttpRequest(); // Object used 'synchronously'.
+let celsius, fahrenheit;
+
+/* Getting User Location
+==============================================================================*/
+function getLocation() {
+  xhr.open("GET", "http://ip-api.com/json", true);
+  xhr.send(null);
+  xhr.onerror = getGeoLocation;
+  xhr.onload  = locHandler;
+}
+getLocation();
+
+/** @function locHandler()
+ * Parse the JSON response and passes the @arg city to @function getWeather
+ * to be used to get the user's weather. An auto refresh for the @function getWeather
+ * had been set every 30 seconds.
+ */
+function locHandler() {
+  let loction = JSON.parse(this.response);
+  let city = loction.city;
+  const updateWeather = () => getWeather(city); // Makes it easier to remove the listener.
+  userLocation.innerHTML = city + ", " + loction.region;
+  getWeather(city);
+  setInterval(updateWeather, 1000); // Auto Refresh
+}
+
+/* Getting User Location using HTTPs
+==============================================================================*/
+function getGeoLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(position => {
+      let lat = position.coords.latitude;
+      let lon = position.coords.longitude;
+      getWeather(false, lat, lon);
+    });
+  } else {
+    connectionErr();
+  }
+}
+
+/* Getting location weather
+==============================================================================*/
+/** @function getWeather(city)
+ * Use the XHR or navigator object to GET the weather based on location,
+ * API key soruce: https://openweathermap.org/appid
+ */
+function getWeather(city, lat, lon) {
+  msgBox.classList.remove("error");
+  const link = "http://api.openweathermap.org/data/2.5/weather?";
+  const apiParameters = [
+    "&units=metric",
+    "&APPID=02108687a539cef68979465001462511"
+  ];
+  if (city !== false) {
+    xhr.open("GET", link + "q=" + city + apiParameters[0] + apiParameters[1], true);
+    xhr.send(null);
+    xhr.onerror = offlineErr;
+    xhr.onload = WeaHandler;
+  } else {
+    /** NOTE:
+     * Using openweathermap API with HTTPs requires premium account
+     * So I am using https://cors-anywhere.herokuapp.com/ to enable HTTPs-HTTP CROS..
+     * 
+     * Alternative CORS sites: 
+     *  - https://crossorigin.me/
+     *  - https://cors-anywhere.herokuapp.com/
+     *  - https://anyorigin.com/go?url=
+     */
+    let httpsCORS = "https://cors-anywhere.herokuapp.com/";
+    let geoLocation = `lat=${lat}&lon=${lon}`;
+    xhr.open("GET", httpsCORS + link + geoLocation + apiParameters[0] + apiParameters[1], true);
+    xhr.setRequestHeader('Access-Control-Allow-Origin', '*'); // ACAO: Allows all domains - https://www.w3.org/TR/cors/.
+    xhr.send(null);
+    xhr.onerror = offlineErr;
+    xhr.onload  = WeaHandler;
+  }
+}
+
+/** @function WeaHandler()
+ * Parse the JSON response, sanitize some default values and
+ * sets all required values to its apporpraite elements.
+ */
+function WeaHandler() {
+  let data = JSON.parse(this.response);
+  celsius = data.main.temp.toFixed();
+  fahrenheit = Math.round(celsius * 9 / 5 + 32);
+
+  pressure.innerHTML = (data.main.pressure * 0.000145).toFixed(2); // hPa to psi
+  wind[0].innerHTML = data.wind.speed.toFixed(1); // m/s
+  wind[1].innerHTML = data.wind.deg !== undefined ? data.wind.deg : "NE"; // xxx degree
+  humidity.innerHTML = data.main.humidity; // %
+
+  if (weatherTemp[1].classList.contains("wi-celsius")) {
+    weatherTemp[0].innerHTML = celsius;
+  } else {
+    weatherTemp[0].innerHTML = fahrenheit;
+  }
+
+  weatherIcon.classList.remove("wi-na");
+  weatherIcon.classList.add(iconGenerator(data.weather[0].id));
+  weatherSum.innerHTML = data.weather[0].description;
+
+  if (document.location.protocol === 'https:') {
+    userLocation.innerHTML = data.name + ", " + data.sys.country;
+  }
+}
+
+let icon;
+/** => Display Weather Icon based on weather state:
+ * Using the weather API response weather state ID, I am able to display
+ * external icons based on the current weather state.
+ * Full OWM weather codes: https://openweathermap.org/weather-conditions
+ * Weather Icons: https://erikflowers.github.io/weather-icons/
+ */
+function iconGenerator(value) {
+  // Using if/else to handle range values.
+  if (value < 300) {
+    icon = "wi-thunderstorm";
+  } else if (value < 400) {
+    icon = "wi-day-showers";
+  } else if (value < 600) {
+    icon = "wi-showers";
+  } else if (value < 700) {
+    icon = "wi-snow";
+  } else if (value < 800) {
+    icon = "wi-fog";
+  } else if (value === 800) {
+    icon = "wi-moon-new"; // wi-day-sunny
+  } else if (value < 900) {
+    icon = "wi-day-sunny-overcast";
+  } else if (value < 910) {
+    icon = "wi-earthquake";
+  } else {
+    icon = "wi-cloud";
+  }
+  return icon;
+}
+
+unitSwitchBtn[0].addEventListener("click", unitToggle);
+/** @function unitToggle()
+ * Switch between fahrenheit & celsius units on click.
+ * I am using @const weatherTemp[1] classList to detect if one unit or another is used.
+ */
+function unitToggle() {
+  if (weatherTemp[1].classList.contains("wi-celsius")) {
+    weatherTemp[0].innerHTML = fahrenheit;
+    weatherTemp[1].classList.toggle("wi-fahrenheit");
+    weatherTemp[1].classList.toggle("wi-celsius");
+    unitSwitchBtn[1].classList.toggle("activeUnit");
+    unitSwitchBtn[2].classList.toggle("activeUnit");
+  } else {
+    weatherTemp[0].innerHTML = celsius;
+    weatherTemp[1].classList.toggle("wi-fahrenheit");
+    weatherTemp[1].classList.toggle("wi-celsius");
+    unitSwitchBtn[1].classList.toggle("activeUnit");
+    unitSwitchBtn[2].classList.toggle("activeUnit");
+  }
+}
+
+/* Error Handlers
+==============================================================================*/
+/** @function connectionErr()
+ * A connection error warning that is triggered when @function getLocation
+ * request could not be sent. (usually Because the user is using an HTTPs connection)
+ */
+function connectionErr() {
+  msgBox.innerHTML =
+    '<b>Connection Error:</b><br>Please use an <a href="https://codepen.io/U-ways/full/ZOVGwE/" target="_blank">HTTP Connection.</a> <i class="fa fa-external-link"></i>';
+  msgBox.classList.add("error");
+}
+
+/** @function offlineErr()
+ * A Network error warning that is triggered when @function getWeather
+ * request could not be sent. (usually Because the user lost network connection
+ * or a server error.)
+ */
+function offlineErr() {
+  msgBox.innerHTML =
+    "<b>Network Error:</b><br>Please Check Your Internet Connection.";
+  msgBox.classList.add("error");
+}
+
+/* Adding project Details
+==============================================================================*/
+addProjDetails(0, 'Project Overview', 'This a local weather display widget that uses the client IP address or Geo-location to retrieve the current weather information and display it nicely with additional weather-related information.');
+addProjDetails(0, 'Techniques/Technologies', 'I have used AJAX techniques to get the user location, then by passing the user’s location into the weather API’s parameters, I managed to get the current local weather information for the user to observe.');
+addProjDetails(0, 'Extra features', 'I have provided an ‘auto-refresh’ functionality to constantly update the weather information every 30 seconds.');
+
+addProjDetails(1, 'Hurdles encountered', 'Getting the user location was a bit troublesome. If the user was not using a secure connection, it would be more convenient to get their IP address and translate the location value of that public address. However, if the user was using a secure connection, I can’t do that. As the API used to retrieve the user location is unable to intercept secure connections. <br><br>Therefore, I had to setup a polyfill to handle secure connections. My solution was to get the user’s geo-location by directly requesting permission from the user. When permitted the application will use the user’s latitude and longitude as a substitute for the user’s city name to retrieve the local weather information. <br><br> The end result was full support for secure and non-secure connections.');
+
+</script>
+</body>
+</html>

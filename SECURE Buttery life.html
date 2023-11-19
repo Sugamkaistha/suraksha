@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+		html {
+  box-sizing: border-box;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+body {
+  background: #282828;
+  -webkit-font-smoothing: antialiased;
+  font-family: sans-serif;
+}
+:root {
+  --battery-api: 0;
+  --battery-level: 66;
+  --battery-charging: 1;
+  --battery-charging-time: 30000;
+  --battery-discharging-time: -1;
+  --battery-level-low: 20;
+}
+:root {
+  font-size: 16px;
+}
+@media (min-width: 400px) and (max-width: 1000px) {
+  :root {
+    font-size: calc(16px +  20 *  (100vw - 400px) /  600);
+  }
+}
+@media (min-width: 1000px) {
+  :root {
+    font-size: 36px;
+  }
+}
+body::after {
+  color: red;
+  position: absolute;
+  top: 0;
+  font-size: 0.7rem;
+  content: 'Battery Status API not supported';
+  padding: 20px;
+  opacity: calc(1 - var(--battery-api));
+}
+body::before {
+  color: white;
+  display: block;
+  padding: 20px;
+  font-family: sans-serif;
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+  counter-reset: battery-level var(--battery-level) battery-charging var(--battery-charging) battery-charging-time var(--battery-charging-time) battery-discharging-time var(--battery-discharging-time);
+  content: '\A Battery level: ' counter(battery-level) '%' '\A Charging: ' counter(battery-charging) '\A Time to fully charged : ' counter(battery-charging-time) 's ' '\A Time to fully discharged: ' counter(battery-discharging-time) 's ';
+}
+.battery {
+  position: relative;
+  width: 5rem;
+  height: 2.5rem;
+  margin: 20px auto;
+  border-radius: 0.3rem;
+  border: 0.1rem solid white;
+  transition: 300ms;
+  background-image: linear-gradient(to right, rgba(0, 255, 0, calc(var(--battery-charging))) calc(var(--battery-level)*1%), rgba(0, 0, 0, 0) calc(var(--battery-level)*1%)), linear-gradient(to right, rgb(calc(255 * var(--battery-level) +
+                    0 * (var(--battery-level) - var(--battery-level-low))), calc(0 * var(--battery-level) +
+                    255 * (var(--battery-level) - var(--battery-level-low))), calc(0 * var(--battery-level) +
+                    255 * (var(--battery-level) - var(--battery-level-low)))) calc(var(--battery-level)*1%), rgba(0, 0, 0, 0) calc(var(--battery-level)*1%));
+  background-repeat: no-repeat;
+}
+.battery::after {
+  content: '';
+  display: block;
+  width: 0.4rem;
+  position: absolute;
+  right: -0.6rem;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  border-radius: 0 0.2rem 0.2rem 0;
+  border: 0.1rem solid white;
+}
+.battery::before {
+  font-family: sans-serif;
+  font-size: 1.5rem;
+  content: counter(battery-level) '%';
+  position: absolute;
+  color: white;
+  top: 50%;
+  left: -1rem;
+  transform: translate(-100%, -50%);
+}
+a {
+  position: fixed;
+  bottom: 5px;
+  font-size: 12px;
+  color: gold;
+}
+
+	</style>
+</head>
+<body>
+<div class="battery"></div>
+
+
+<a href="http://caniuse.com/#feat=battery-status" target="_blank">Please note this has limited support</a>
+<script type="text/javascript">
+	(() => {
+    // Get battery promise from navigator
+    if (navigator.getBattery) {
+        navigator.getBattery()
+            .then(success)
+            .catch(error);
+    } else {
+        error();
+    }
+    function success(battery) {
+        // BatteryManager available
+        if (battery) {
+            // Document style
+            const docStyle = document.documentElement.style;
+            // Add event listeners
+            ['levelchange', 'chargingchange', 'chargingtimechange', 'dischargingtimechange']
+                .map(event => battery.addEventListener(event, batteryStatus), false);
+            // Battery status
+            function batteryStatus() {
+                // battery.charging         true/false
+                // battery.chargingTime     seconds to fully charged
+                // battery.dischargingTime  seconds to fully discharged
+                // battery.level            battery level between 0.0 and 1.0
+                docStyle.setProperty('--battery-api', 1);
+                docStyle.setProperty('--battery-charging', battery.charging ? 1 : 0);
+                docStyle.setProperty('--battery-charging-time', battery.chargingTime);
+                docStyle.setProperty('--battery-discharging-time', battery.dischargingTime === Infinity ? -1 : battery.dischargingTime);
+                docStyle.setProperty('--battery-level', battery.level * 100);
+            }
+            // Initial trigger
+            batteryStatus();
+        } else {
+            error();
+        }
+    }
+    // Close, but no cigar
+    function error() {
+        console.log('Battery API rejected');
+    }
+})()
+
+
+
+</script>
+</body>
+</html>

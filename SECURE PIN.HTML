@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css">
+		/* Colours. */
+/* Measures */
+ body {
+	 align-items: center;
+	 background: #673ab7;
+	 display: flex;
+	 font-family: Open Sans;
+	 height: 100vh;
+	 justify-content: center;
+}
+ #inspiration {
+	 bottom: 0;
+	 position: absolute;
+	 right: 1em;
+	 text-align: right;
+}
+ #inspiration a {
+	 color: white;
+	 font-weight: bold;
+	 text-decoration: none;
+}
+ #inspiration a:hover {
+	 text-decoration: underline;
+}
+ #inspiration span {
+	 color: rgba(255, 255, 255, .6);
+}
+ #pin {
+	 color: rgba(255, 255, 255, .2);
+	 height: 33em;
+	 perspective: 1000px;
+	 position: relative;
+	 width: 22em;
+}
+ #pin > .display {
+	 background: #212121;
+	 border: 4px solid #9e1e1e;
+	 border-radius: 30px;
+	 box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
+	 box-sizing: border-box;
+	 height: 100%;
+	 left: 0;
+	 padding: 3em 1em 1em;
+	 position: absolute;
+	 text-align: center;
+	 top: 0;
+	 width: 100%;
+	 transition: transform 0.6s, border-color 0.6s;
+	 -webkit-backface-visibility: hidden;
+}
+ #pin > .display > .dots {
+	 background-color: #a39a8e;
+	 border-radius: 4px;
+	 box-sizing: border-box;
+	 display: flex;
+	 height: 72px;
+	 justify-content: space-around;
+	 margin: 0 auto;
+	 padding: 1.7em 1em;
+	 width: 75%;
+}
+ #pin > .display > .dots > .dot {
+	 background: rgba(0, 0, 0, .6);
+	 border-radius: 1em;
+	 box-shadow: 4px 4px 12px 2px rgba(0, 0, 0, .12);
+	 height: 1em;
+	 position: relative;
+	 transform: scale3d(0.5, 0.5, 0.5);
+	 width: 1em;
+	 transition: background-color 0.5s, transform 0.5s;
+}
+ #pin > .display > .dots > .dot.active {
+	 background-color: rgba(0, 0, 0, .8);
+	 transform: scale3d(1, 1, 1);
+}
+ #pin > .display > .numbers {
+	 align-content: flex-end;
+	 align-items: center;
+	 display: flex;
+	 flex-flow: row wrap;
+	 justify-content: space-around;
+	 margin: 2em 0;
+}
+ #pin > .display > .numbers > .number {
+	 border: 2px solid rgba(0, 0, 0, 0);
+	 border-radius: 2.5em;
+	 cursor: pointer;
+	 font-size: 1.8em;
+	 height: 2.3148148148em;
+	 line-height: 2.5em;
+	 margin: 0.3125em 0.2083333333em;
+	 position: relative;
+	 text-align: center;
+	 user-select: none;
+	 width: 2.5em;
+	 transition: color 0.5s;
+}
+ #pin > .display > .numbers > .number:hover {
+	 color: rgba(255, 255, 255, .5);
+}
+ #pin > .display > .numbers > .number:hover:before {
+	 border-color: rgba(255, 255, 255, .5);
+}
+ #pin > .display > .numbers > .number:before {
+	 border: 2px solid rgba(255, 255, 255, .1);
+	 border-radius: 2.5em;
+	 content: '';
+	 height: 2.5em;
+	 left: -2px;
+	 position: absolute;
+	 width: 2.5em;
+	 transition: border-color 0.5s;
+}
+ #pin > .display > .numbers > .number.grow:before {
+	 animation: grow 0.6s;
+}
+ #pin > div.guide {
+	 background-color: #212121;
+	 border: 4px solid #9e1e1e;
+	 border-radius: 30px;
+	 box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
+	 box-sizing: border-box;
+	 color: rgba(255, 255, 255, .2);
+	 height: 100%;
+	 left: 0;
+	 padding: 1em;
+	 position: absolute;
+	 top: 0;
+	 transform: rotateY(-180deg);
+	 width: 100%;
+	 transition: transform 0.6s, border-color 0.6s;
+	 -webkit-backface-visibility: hidden;
+}
+ #pin > div.guide > .credit {
+	 bottom: 1em;
+	 display: block;
+	 left: -0.5em;
+	 margin: 0;
+	 position: absolute;
+	 text-align: center;
+	 width: 100%;
+}
+ #pin > div.guide > button {
+	 background-color: transparent;
+	 border: 4px solid #9e9e9e;
+	 border-radius: 50%;
+	 box-sizing: border-box;
+	 cursor: pointer;
+	 height: 5.5em;
+	 left: 0;
+	 margin: 4em auto;
+	 outline: none;
+	 padding: 4px;
+	 position: absolute;
+	 right: 0;
+	 width: 5.5em;
+	 transition: border-color 0.5s;
+}
+ #pin > div.guide > button > span {
+	 background-color: #9e1e1e;
+	 border-radius: 50%;
+	 box-sizing: border-box;
+	 cursor: pointer;
+	 display: block;
+	 height: calc(100% - 4px * 2);
+	 margin: 4px;
+	 width: calc(100% - 4px * 2);
+	 transition: background-color 0.5s;
+}
+ #pin > div.guide > button:after {
+	 background-color: #9e9e9e;
+	 border: 4px solid #212121;
+	 border-radius: 8px;
+	 bottom: 50%;
+	 content: '';
+	 cursor: pointer;
+	 display: block;
+	 height: 75%;
+	 left: calc(50% - 4px / 2 - 4px);
+	 position: absolute;
+	 width: 4px;
+	 transition: background-color 0.5s;
+}
+ #pin > div.guide > button:hover {
+	 border-color: #bdbdbd;
+}
+ #pin > div.guide > button:hover > span {
+	 background-color: #ea2d2d;
+}
+ #pin > div.guide > button:hover:after {
+	 background-color: #bdbdbd;
+}
+ #pin > div.guide > p {
+	 font-size: 22px;
+	 padding: 0.15em 0.5em;
+}
+ #pin > input[type="checkbox"] {
+	 display: none;
+}
+ #pin > input[type="checkbox"]:checked ~ div.guide {
+	 transform: rotateY(0);
+}
+ #pin > input[type="checkbox"]:checked + label, #pin > input[type="checkbox"]:checked ~ div.display {
+	 transform: rotateY(180deg);
+}
+ #pin > input[type="checkbox"]:checked + label {
+	 box-shadow: -4px 4px 8px rgba(0, 0, 0, .3);
+}
+ #pin > label[for="guide"] {
+	 background-color: #212121;
+	 border-radius: 0.3em;
+	 box-shadow: 4px 4px 8px rgba(0, 0, 0, .3);
+	 cursor: pointer;
+	 height: 80px;
+	 left: 100%;
+	 position: absolute;
+	 top: calc(50% - 80px / 2);
+	 transform-origin: -11em center;
+	 width: 48px;
+	 z-index: 0;
+	 transition: transform 0.6s;
+}
+ #pin > label[for="guide"]:after {
+	 border-bottom: 10px solid transparent;
+	 border-left: 10px solid rgba(255, 255, 255, .2);
+	 border-top: 10px solid transparent;
+	 content: '';
+	 display: block;
+	 height: 0;
+	 left: calc(50% - 10px / 2);
+	 position: absolute;
+	 top: calc(50% - 10px);
+	 width: 0;
+	 transition: border-left-color 0.5s;
+}
+ #pin > label[for="guide"]:hover:after {
+	 border-left-color: rgba(255, 255, 255, .5);
+}
+ #pin.wrong {
+	 animation: wrong 0.9s;
+}
+ #pin.wrong > div.display, #pin.wrong > div.guide {
+	 border-color: #9e1e1e;
+}
+ #pin.correct {
+	 animation: correct 0.9s;
+}
+ #pin.correct > div.display, #pin.correct > div.guide {
+	 border-color: #388e3c;
+}
+ @keyframes correct {
+	 20% {
+		 transform: translateY(0);
+	}
+	 40% {
+		 transform: translateY(-10px);
+	}
+	 60% {
+		 transform: translateY(20px);
+	}
+	 80% {
+		 transform: translateY(-10px);
+	}
+}
+ @keyframes grow {
+	 50% {
+		 transform: scale3d(1.5, 1.5, 1.5);
+	}
+	 100% {
+		 transform: scale3d(1, 1, 1);
+	}
+}
+ @keyframes wrong {
+	 20% {
+		 transform: translateX(0);
+	}
+	 40% {
+		 transform: translateX(-10px);
+	}
+	 60% {
+		 transform: translateX(20px);
+	}
+	 80% {
+		 transform: translateX(-10px);
+	}
+}
+ 
+	</style>
+</head>
+<body>
+<div id="inspiration">
+</div>
+<div id="pin"><input type="checkbox" id="guide" /><label class="guide" for="guide"></label>
+    <div class="display">
+        <div class="dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        <div class="numbers">
+            <div class="number">1</div>
+            <div class="number">2</div>
+            <div class="number">3</div>
+            <div class="number">4</div>
+            <div class="number">5</div>
+            <div class="number">6</div>
+            <div class="number">7</div>
+            <div class="number">8</div>
+            <div class="number">9</div>
+            <div class="number">0</div>
+        </div>
+    </div>
+    <div class="guide">
+        <p>Your secure key</p>
+        <p id="secure_key">temporarily unavailable</p><button id="generator"><span></span></button><span class="credit">&copy; Sugam Secure</span></div>
+</div>
+<script type="text/javascript">
+	(function() {
+	var options = {
+		activeClass: 'active',
+		correctClass: 'correct',
+		correctEntry: '1738',
+		correctGuideId: 'secure_key',
+		entryDigitClass: 'dot',
+		generatorId: 'generator',
+        guideInputId: 'guide',
+		incorrectClass: 'wrong',
+		inputAnimationLength: 900,
+		keypadNumberClass: 'number',
+		keyPressAnimationLength: 1000,
+		keyPressClass: 'grow',
+		pinCaseId: 'pin',
+	};
+	
+	var input 	= '',
+		dots    = document.querySelectorAll('.' + options.entryDigitClass),
+		numbers = document.querySelectorAll('.' + options.keypadNumberClass);
+	
+	dots    = Array.prototype.slice.call(dots);
+	numbers = Array.prototype.slice.call(numbers);
+	
+	// Load up the first correct entry - today's date.
+	(function () {
+		var date = new Date();
+		var day = date.getDate();
+		var month = date.getMonth() + 1;
+		if (month < 10) month = '0' + month;
+		if (day < 10) day = '0' + day;
+		options.correctEntry = '' + month + day;
+        setGuideDisplay();
+	})();
+	
+	// Listens for any key presses.
+	(function () {
+		window.addEventListener('keyup', function (event) {
+			var number = mapKeyChar(event.keyCode);
+			if (number === undefined) return;
+            if (number === -1) number = 9;
+			numbers[number].click();
+		});
+	})();
+	
+	// Activate the generator button.
+	(function () {
+		var generator = document.getElementById(options.generatorId);
+		if (generator === null) return;
+		generator.addEventListener('click', function () {
+			var newValue = '';
+			for (var i = 0; i < options.correctEntry.length; i++) {
+				newValue += getRandomDigit();
+			}
+			options.correctEntry = newValue;
+			setGuideDisplay();
+		});
+	})();
+	
+	function addClass (className, element, disableCheck) {
+		if (element.length !== undefined) {
+			element.forEach(function (el) {
+				addClass(className, el);
+			});
+		} else if (disableCheck || !element.classList.contains(className)) {
+			element.classList.add(className);
+		}
+	}
+	
+	// Animates the (un)successful code entry.
+	function checkValidity (index) {
+		var className = (input === options.correctEntry) ? options.correctClass : options.incorrectClass;
+
+		toggleClass(className, document.getElementById(options.pinCaseId), options.inputAnimationLength);
+		toggleClass(options.activeClass, dots, options.inputAnimationLength, true);
+		
+		setTimeout(function () {
+			input = '';
+		}, options.inputAnimationLength);
+	}
+	
+	// Returns 1-9
+	function getRandomDigit () {
+		return Math.floor(Math.random() * 9) + 1;
+	}
+	
+	// Checks if the user has entered all required
+	// digits into the keypad.
+	function hasEnteredAllDigits () {
+		return input.length === options.correctEntry.length;
+	}
+	
+	function isInvalidTimeout (timeout) {
+		return timeout === undefined || timeout === null || timeout === 0;
+	}
+	
+	function mapKeyChar (char) {
+		// Backspace.
+		// Remove the last digit from the stored value, and
+		// also from the visual feedback to the user.
+		if (char === 8 && input.length) {
+			input = input.substr(0, input.length - 1);
+			dots[input.length].classList.remove(options.activeClass);
+			return;
+		}
+        
+        console.log(char);
+        
+        // Rotate the pad on arrow left/right press.
+        if (char === 37 || char === 39) {
+            var toggle = document.getElementById(options.guideInputId);
+            if (toggle === null) return;
+            // Don't allow flipping by continuously pressing the same key.
+            // We use different keys to flip in either direction.
+            if ((toggle.checked && char === 39) || (!toggle.checked && char === 37)) return;
+            toggle.checked = !toggle.checked;
+            return;
+        }
+		
+		// The pressed key is out of the desired input range.
+		if (char < 48 || char > 57) {
+			return;
+		}
+		
+		// Convert the pressed key to numerical value.
+		return char - 49;
+	};
+	
+	function removeClass (className, element) {
+		if (element.length !== undefined) {
+			element.forEach(function (el) {
+				el.classList.remove(className);
+			});
+		} else {
+			element.classList.remove(className);
+		}
+	}
+    
+    // Displays the correct combination in the guide.
+	function setGuideDisplay () {
+		var guide = document.getElementById(options.correctGuideId);
+		if (guide === null) return;
+		guide.innerHTML = options.correctEntry;
+	};
+	
+	// Temporarily toggles a class on the element (array of elements)
+	// for the given time. Omit timeout or set to 0 to addOnly.
+	function toggleClass (className, element, timeout, removeOnly) {
+		if (removeOnly !== true) {
+			addClass(className, element);
+		} else if (isInvalidTimeout(timeout)) {
+			timeout = 1;
+		}
+		
+		if (isInvalidTimeout(timeout)) return;
+		
+		setTimeout(function () {
+			removeClass(className, element);
+		}, timeout);
+	};
+	
+	numbers.forEach(function (number, index) {
+		number.addEventListener('click', function () {
+			// Prevents user from entering new values while
+			// evaluating the last input.
+			if (hasEnteredAllDigits()) return;
+			
+			// Animates the key press.
+			toggleClass(options.keyPressClass, number, options.keyPressAnimationLength);
+			
+			// Marks another dot as active.
+			dots[input.length].classList.add(options.activeClass);
+			
+			// Adds the current value to the input.
+            if (index === 9) index = -1;
+			input += (index + 1);
+			
+			// Validates the input if we have reached
+			// the limit length.
+			if (hasEnteredAllDigits()) {
+				checkValidity(index);
+			}
+		});
+	});
+})();
+</script>
+</body>
+</html>
