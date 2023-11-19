@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
+
+  <style type="text/css">
+    body {
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+}
+
+/* top part background */
+
+.head-start {
+    background-image: url('https://cdn.glitch.global/af47b557-6e36-4627-9d5d-f8b342264514/pattern-bg.png?v=1658978152402');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 30vh;
+}
+
+/* container of top part content */
+
+#main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    top: 20px;
+}
+
+/* WHITE PART WITH THE RESULTS */
+
+.info-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 70%;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 2px 15px 35px hsla(0, 0%, 60%, 0.5);
+    margin-top: 40px;
+    z-index: 2;
+}
+
+.info-container > * {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    padding: 0 20px;
+}
+
+.bd-gr {
+    border-right: 1px solid hsl(0, 0%, 70%);
+}
+
+/* MAPITA */
+
+#map {
+    height: 70vh; 
+    z-index: 1;
+}
+
+/* HEADINGS */
+h1 {
+    color: white;
+    margin-bottom: 0 0 20px;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h2 {
+    color: hsl(0, 0%, 59%);
+    font-size: 0.8rem;
+    margin: 0;
+    font-weight: 400;
+}
+
+p {
+    margin-top: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+/* input ip part */
+.input-ip {
+    display: flex;
+    width: 35vw;
+}
+
+.input-ip > * {
+    padding: 10px 20px;
+    border-style: none;
+}
+
+.input-ip input {
+    width: 100%;
+    border-radius: 10px 0 0 10px;
+    cursor: pointer;
+}
+
+/* fooooter */
+footer {
+    position: absolute;
+    bottom: 0;
+    z-index: 2;
+    padding: 10px;
+    width: 50vw;
+    margin-left: 25vw;
+    background: rgba(255, 255, 255, 0.5)
+}
+
+/* BUTTTOOOOOONKS */
+button {
+    border-radius: 0 10px 10px 0;
+    background: black;
+    cursor: pointer;
+}
+
+button:hover {
+    background: hsl(0, 0%, 17%);
+}
+
+@media (max-width: 400px) {
+    footer {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 800px) {
+   .info-container {
+       display: block;
+       text-align: center;
+       margin-top: 20px;
+   } 
+
+   .info-container, .input-ip {
+       width: 75%;
+   }
+
+   .bd-gr {
+        border-right-style: none;
+        border-radius: 1px solid hsl(0, 0%, 70%);
+    }
+
+   .head-start {
+       height: 40vh;
+   }
+
+   #map {
+       height: 60vh;
+   }
+
+   p {
+       font-size: 1rem;
+       margin-bottom: 0;
+   }
+}
+
+@media (min-width: 1440px) {
+    h1 {
+        margin-top: 60px;
+    }
+}
+  </style>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css"
+    integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ=="
+    crossorigin="" />
+
+  <!-- Make sure you put this AFTER Leaflet's CSS -->
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
+    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
+    crossorigin=""></script>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution {
+      font-size: 11px;
+      text-align: center;
+    }
+
+    .attribution a {
+      color: hsl(228, 45%, 44%);
+    }
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+  <main>
+
+    <section class="head-start">
+
+      <section id="main-container">
+        <h1>
+          IP Address Tracker
+        </h1>
+  
+        <section class="input-ip">
+          <input type="text" placeholder="Search for any IP address or domain">
+          <button>
+            <img src="https://ik.imagekit.io/a8p7pl7hs/sites/icon-arrow_x5lDvyPjY.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1658977365981" alt="submit ip">
+          </button>
+        </section>
+  
+        <section class="info-container">
+          <section class="bd-gr">
+            <h2>IP Address</h2>
+            <p id="ip" class="result"></p>
+          </section>
+
+          <section class="bd-gr">
+            <h2>Location</h2>
+            <p id="location" class="result"></p>
+          </section>
+
+          <section class="bd-gr">
+            <h2>Timezone
+              UTC
+            </h2>
+            <p class="result" id="time"></p>
+          </section>
+
+          <section>
+            <h2>ISP</h2>
+            <p class="result" id="isp"></p>
+          </section>
+        </section>
+      </section>
+      
+
+    </section>
+
+
+    <div id="map"></div>
+  </main>
+
+  <footer>
+    <div class="attribution">
+      DESIGN AND DEVELOPED BY</a>.
+      Sugam Kaistha</a>.
+    </div>
+  </footer>
+
+  <script type="text/javascript">
+    // SEARCH
+const btn = document.querySelector('button');
+const inputIP = document.querySelector('input');
+
+// RESULTS
+const displayIP = document.querySelector('#ip');
+const displayLocation = document.querySelector('#location');
+const displayTime = document.querySelector('#time')
+const displayISP = document.querySelector('#isp');
+
+let map, startIP;
+
+window.addEventListener('load', (event) => {
+    testUserIP()
+});
+
+btn.addEventListener('click', fetchIP)
+
+async function testUserIP() {
+    if (!startIP) {
+        let makeFetchHappen = await fetch('https://api.ipify.org/?format=json')
+        let result = await makeFetchHappen.json()
+        startIP = result.ip
+        fetchIP(startIP)
+    } else {
+        console.log('move on from this ip you creep')
+    }
+}
+
+async function fetchIP() {
+    // if you get the value outside of this function on a global scope (at the top, right away on page load), you will get undefined, not the value
+    let ipTest;
+    
+    if (inputIP.value) {
+        ipTest = inputIP.value
+    } else {
+        ipTest = startIP
+    }
+    
+    const apiK = 'at_UtW2ct8oP2PVku8BMGGgy5JqnpB59'
+    let connectionUrl = `https://geo.ipify.org/api/v1?apiKey=${apiK}&ipAddress=${ipTest}`
+    
+    const results = await fetch(connectionUrl);
+    const data = await results.json()
+
+    // coordinates for the map
+    let latlng = L.latLng(data.location.lat, data.location.lng);
+
+    mapIt(latlng)
+
+    displayResults(data)
+}
+
+function mapIt(ltlg) {
+    if (map) {
+        map.off();
+        map.remove();
+    }
+    map = L.map('map').setView(ltlg, 13)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    let markerIcon = L.icon({
+    iconUrl: 'https://ik.imagekit.io/a8p7pl7hs/sites/icon-location_Q89yew-aI.svg?ik-sdk-version=javascript-1.4.3&updatedAt=1658977365893',
+  })
+
+    let marker = L.marker(ltlg, {icon: markerIcon}).addTo(map);
+}
+
+function displayResults(data) {
+    // get info to display from the data
+    let ip = data.ip;
+    let location = `${data.location.city}, ${data.location.region}, ${data.location.postalCode}`
+    let timezone = data.location.timezone
+    let isp = data.isp
+
+    displayIP.innerText = ip
+    displayLocation.innerText = location
+    displayTime.innerText = timezone
+    displayISP.innerText = isp
+}
+
+
+
+
+  </script>
+  
+</body>
+
+</html>

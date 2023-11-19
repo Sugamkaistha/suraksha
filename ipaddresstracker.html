@@ -1,0 +1,159 @@
+ <!DOCTYPE html>
+
+
+<head>
+
+    <style type="text/css">
+        
+
+body {
+    background-color: #000;
+    color: #00ff00;
+    font-family: "Courier New", monospace;
+
+
+}
+
+.container {
+    background-color: #111;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    padding: 20px;
+    max-width: 100%;
+    margin: 0 auto;
+    background-image: url('data:image/svg+xml,%3Csvg width="12" height="12" viewBox="0 0 52 26" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%239C92AC" fill-opacity="0.4"%3E%3Cpath d="M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z" /%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+}
+
+h1 {
+    color: #00ff00;
+    font-size: 28px;
+}
+
+.search {
+    margin-top: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 80%;
+    background-color: #333;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    border-radius: 50px;
+}
+
+#trackButton {
+    background-color: #00ff00;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-left: 10px;
+    border-radius: 5px;
+}
+
+#result {
+    margin-top: 20px;
+    text-align: left;
+}
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+</head>
+
+<body>
+    <div class="container">
+  <i class="fas fa-lock"></i>
+
+ 
+
+           <h1>IP Location Tracker
+
+        </h1>
+        <div class="search">
+
+            <input type="text" id="ipInput" placeholder="Entr an IP address">
+            <button id="trackButton">Track</button>
+
+
+        </div>
+<div id="result">
+    <p id="provider">Internet Provider: -</p>
+    <p id="region">Region: -</p>
+    <p id="City">City: -</p>
+    <p id="SubContinent">Sub-Continent: -</p>
+    <p id="Continent">Continent: -</p>
+    <p id="country">Country: -</p>
+    <p id="timezone">Timezone: -</p>
+    <p id="connection">Connetion: -</p>
+    <p id="population">Population: -</p>
+    <p id="UserIP">User IP: -</p>
+     
+
+
+  <p id="coordinates">Latitude: , Longitude: </p>
+    <p id="GSP">GSP: -</p>
+    <p id="connection"><a href="https://sugamsuraksha.w3spaces.com/sugammaptracker.html">Map Tracker</a></p>
+    <p id="connection"><a href="https://sugamsuraksha.w3spaces.com/vpnllt.html">VPN LAST LOCATION Tracker</a></p>
+
+
+  
+</div>
+
+
+
+
+    </div>
+
+    <script src="script.js"></script>
+<script type="text/javascript">
+    
+
+    document.getElementById('trackButton').addEventListener('click', function() {
+
+            const ipInput = document.getElementById('ipInput').value;
+
+    fetch(`https://ipinfo.io/${ipInput}/json`)
+
+        .then(response => response.json())
+
+        .then(data => {
+
+
+
+            const coordinates = `Latitude: ${data.loc.split(',')[0]}, Longitude: ${data.loc.split(',')[1]}`;
+
+            const provider = `Internet Provider: ${data.org}`;
+            const UserIP = `UserIP: ${data.isp}`;
+            const SubContinent = `Sub-Continent: ${data.subcontinent}`;
+            const Connection = `connection: ${data.conection}`;
+            const Population = `population: ${data.population}`;
+            const Continent =`Continent : ${data.continent}`;
+            const timezone = `Timezone: ${data.timezone}`;
+            const GSP = `GSP: ${data.gsp}`;
+            const country = `Country Code: ${data.country}`;
+            const region = `Region: ${data.region}`;
+            const city = `City: ${data.city}`;
+
+            document.getElementById('coordinates').textContent = coordinates;
+ document.getElementById('UserIP').textContent = UserIP;           document.getElementById('provider').textContent = provider;
+            document.getElementById('timezone').textContent = timezone;
+            document.getElementById('country').textContent = country;
+            document.getElementById('connection').textContent = Connection;
+            document.getElementById('population').textContent = Population;
+            document.getElementById('region').textContent = region;
+            document.getElementById('City').textContent = city;
+            document.getElementById('GSP').textContent = GSP;
+            document.getElementById('SubContinent').textContent = SubContinent;
+            document.getElementById('Continent').textContent = Continent;
+        })
+
+        .catch(error => console.error(error));
+
+});
+</script>
+</body>
+
+</h>
