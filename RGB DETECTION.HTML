@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+html, body { margin: 0; }
+
+body { font-family: 'Press Start 2P', sans-serif; }
+#output { background-color: #000; }
+.container { display: none; }
+#status { position: fixed; top: 0px; left: 0px; color: #fff; }
+#status > div { opacity: 0.4; margin-bottom: 8px; cursor: pointer; display: none; }
+canvas { width: 100%; height: auto; }
+
+.action-on {
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    display: block !important;
+    text-indent: -1000px;
+}
+.action-on:hover {
+    background-color: rgba(255,255,255,0.5);   
+}
+
+label {
+  display: block;
+  margin: 1rem;
+}
+.input {
+  font-family: 'Press Start 2P', cursive;
+  background-color: transparent;
+  color: #fff;
+  border: 0;
+  padding-right: 1rem;
+  outline: none;
+}
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style type="text/css@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+html, body { margin: 0; }
+
+body { font-family: 'Press Start 2P', sans-serif; }
+#output { background-color: #000; }
+.container { display: none; }
+#status { position: fixed; top: 0px; left: 0px; color: #fff; }
+#status > div { opacity: 0.4; margin-bottom: 8px; cursor: pointer; display: none; }
+canvas { width: 100%; height: auto; }
+
+.action-on {
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+    display: block !important;
+    text-indent: -1000px;
+}
+.action-on:hover {
+    background-color: rgba(255,255,255,0.5);   
+}
+
+label {
+  display: block;
+  margin: 1rem;
+}
+.input {
+  font-family: 'Press Start 2P', cursive;
+  background-color: transparent;
+  color: #fff;
+  border: 0;
+  padding-right: 1rem;
+  outline: none;
+}		
+	</style>
+</head>
+<body>
+
+
+	<div class="container">
+	    <video autoplay id="video"></video>
+	    <canvas id="canvas" width="1000" height="750"></canvas>
+	  <canvas id="canvasTemp" width="1000" height="750"></canvas>
+	</div>
+
+	<div id="status">
+    <label>R: <input type="number" min="0" max="255" step="5" name="red" class="input" value="255" /></label>
+    <label>G: <input type="number" min="0" max="255" step="5" name="green" class="input" value="100" /></label>
+    <label>B: <input type="number" min="0" max="255" step="5" name="blue" class="input" value="100" /></label>
+		<div class="action-on">On</div>
+		<div class="action-scale">Scale</div>
+		<div class="action-facebounds">Face Bounds</div>
+		<div class="action-facelock">Face Lock</div>
+		<div class="action-image">Image</div>
+	</div>
+	<canvas id="output" width="1000" height="750"></canvas>
+	<script type="text/javascript">
+		const actionOn = document.querySelector('#status .action-on');
+const actionScale = document.querySelector('#status .action-scale');
+const actionFacebounds = document.querySelector('#status .action-facebounds');
+const actionFacelock = document.querySelector('#status .action-facelock');
+const actionImage = document.querySelector('#status .action-image');
+const videoInput = document.getElementById('video');
+const canvasTemp = document.getElementById('canvasTemp');
+const canvasInput = document.getElementById('canvas');
+const canvasOutput = document.getElementById('output');
+const inputs = document.querySelectorAll('.input');
+
+let contextInput = null;
+let contextOutput = null;
+let contextTemp = null;
+let global = { count: 0, running: true };
+ 
+let urlParams = new URLSearchParams(window.location.search);
+let pixelSize = urlParams.get('pixel') ? parseInt( urlParams.get('pixel') ) : 4;
+let pixelX = urlParams.get('x') ? parseInt( urlParams.get('x') ) : 4;
+let pixelY = urlParams.get('y') ? parseInt( urlParams.get('y') ) : 2;
+let colours = {
+  red: document.querySelector('.input[name="red"]').value,
+  green: document.querySelector('.input[name="green"]').value,
+  blue: document.querySelector('.input[name="blue"]').value
+};
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  contextInput = canvasInput.getContext('2d');
+  contextOutput = canvasOutput.getContext('2d');
+  contextTemp = canvasTemp.getContext('2d');
+  
+  draw();
+}); 
+
+inputs.forEach(input => {
+  input.addEventListener('input', e => {
+      colours[input.getAttribute('name')] = input.value;
+  });
+})
+
+actionOn.addEventListener( 'click', () => {
+  global.running = !global.running;
+  // actionOn.innerHTML = global.running ? 'On' : 'Off';
+  actionOn.style.opacity = global.running ? 1 : 0.4;
+  if (!global.running) {
+    // contextOutput.clearRect(0, 0, canvasOutput.width, canvasOutput.height);
+  }
+});
+
+actionScale.addEventListener( 'click', () => {
+  global.scale = !global.scale;
+  actionScale.style.opacity = global.scale ? 1 : 0.4;
+});
+
+actionFacebounds.addEventListener( 'click', () => {
+  global.facebounds = !global.facebounds;
+  actionFacebounds.style.opacity = global.facebounds ? 1 : 0.4;
+});
+
+actionFacelock.addEventListener( 'click', () => {
+  global.facelock = !global.facelock;
+  actionFacelock.style.opacity = global.facelock ? 1 : 0.4;
+});
+
+actionImage.addEventListener( 'click', () => {
+  global.image = !global.image;
+  actionImage.style.opacity = global.image ? 1 : 0.4;
+});
+
+document.addEventListener('facetrackingEvent', ( data ) => {
+  global.data = data; 
+}); 
+
+// document.addEventListener('headtrackrStatus', (status) => {
+//   console.log(status);
+// });
+
+navigator.mediaDevices.enumerateDevices().then((devices) => {
+  var device = devices.filter((device) => device.kind == 'videoinput' && device.label.toLowerCase().indexOf("virtual") < 0);
+
+  console.log(device[0].deviceId);
+
+  if (navigator.mediaDevices.getUserMedia) {       
+    navigator.mediaDevices.getUserMedia({video: true, deviceId: { exact: device[0].deviceId } })
+    .then(function(stream) {
+      videoInput.srcObject = stream;
+
+      // if (headtrackr) {
+      //   const htracker = new headtrackr.Tracker({
+      //     ui: false,
+      //     calcAngles: true
+      //   });
+      //   htracker.init(videoInput, canvasInput); 
+      //   htracker.start();
+      // }
+    })
+    .catch(function(error) {
+      console.error("Something went wrong!", error);
+    });
+  }
+});
+
+
+function draw() {
+  
+  if (global.running) {
+
+    contextInput.drawImage(videoInput,0,0,canvasInput.width,canvasInput.height);
+
+    // let width = canvasInput.width;
+    // let height = canvasInput.height;
+  
+    // if (global.data) {
+    //   width = global.data.width;
+    //   height = global.data.height;
+    //   let x = global.data.x - width / 2;
+    //   let y = global.data.y - height / 2;
+    // }
+
+    let imgData = contextInput.getImageData( 0, 0, canvasInput.width, canvasInput.height);
+    
+    renderOutput( imgData, canvasInput.width, canvasInput.height, 0, 0 );
+    
+    global.lastImage = contextInput.getImageData( 0, 0, canvasInput.width, canvasInput.height );
+
+  }
+  
+  requestAnimationFrame( draw ); 
+  
+}
+
+
+function renderOutput( img, w, h, x, y ) {
+  
+  if (global.lastImage) { 
+    
+    let imageData = global.lastImage;
+    let pixels = imageData.data; 
+    let newPixels = img.data;
+    let modifier = pixelSize; // 4 values per pixel
+    let skipX = pixelX;
+    let skipY = pixelY;
+
+    let unique = {a: 0, b: 0};
+    for (let a=0; a<20; a++) {
+      unique.a += imageData.data[ Math.floor( imageData.data.length / 20 * a ) ];
+      unique.b += img.data[ Math.floor( img.data.length / 20 * a ) ];
+    }
+
+    if ( unique.a != unique.b ) {
+    
+      for (var i = 0; i < pixels.length; i+=(modifier * skipX)) {
+        let index = i / modifier;
+        let xPos = index % imageData.width; 
+        let yPos = parseInt( index / imageData.width );
+
+        let color = 0;
+        let opacity = 255;
+        let pad = w / 2;
+        let wPad = 0;
+        let mod = yPos % skipY;
+        let faceArea = xPos >= x - wPad && xPos <= x + w + wPad && yPos >= y && yPos <= y + h;
+
+        if ( global.facebounds && !faceArea ) {
+          color = 0;
+        } else if (mod == 0) {
+          let oldGrey = pixels[i] * 1 + pixels[i+1] * 0 + pixels[i+2] * 0;
+          let newGrey = newPixels[i] * 1 + newPixels[i+1] * 0 + newPixels[i+2] * 0;
+          color = inRange(newGrey, oldGrey, 20) ? 0 : 1; // newGrey;
+        }
+
+        // if (xPos >= x - wPad && xPos <= x + w + wPad && yPos >= y && yPos <= y + h ) {
+          // color = 50;
+        // }
+
+        if ( !global.image || (global.facebounds && !faceArea) ) {
+
+          for (let l=0; l<modifier * skipX; l+=modifier) {
+
+            if (mod == 0) {
+                
+              let pixelRed = ( color && colours.red < 0 ? randomInRange(0, 255) : colours.red ) * color;
+              let pixelGreen = ( color && colours.green < 0 ? randomInRange(0, 255) : colours.green ) * color;
+              let pixelBlue = ( color && colours.blue < 0 ? randomInRange(0, 255) : colours.blue ) * color;
+
+              pixels[i+l] = pixelRed;
+              pixels[i+l+1] = pixelGreen;
+              pixels[i+l+2] = pixelBlue;
+              pixels[i+l+3] = opacity;
+
+            } else {
+              let yIndex = i - (mod * (imageData.width * modifier)) + l;
+
+              pixels[i+l] = pixels[yIndex];
+              pixels[i+l+1] = pixels[yIndex+1];
+              pixels[i+l+2] = pixels[yIndex+2];
+              pixels[i+l+3] = pixels[yIndex+3];
+
+            }
+
+          }
+
+        }
+
+      }
+
+      let newPosX = global.facelock ? canvasOutput.width / 2 - ( x + w / 2 ) : 0;
+      let newPosY = global.facelock ? canvasOutput.height / 2 - ( y + h / 2 ) : 0;
+      
+      // contextOutput.filter = 'blur(100px)';
+
+      if (!global.scale) {
+
+        contextOutput.clearRect(0, 0, canvasOutput.width, canvasOutput.height);
+        contextOutput.putImageData(imageData, newPosX, newPosY);
+
+      } else {
+
+        let scale = canvasOutput.height / h;
+        let scalePosX = canvasOutput.width / 2 - canvasOutput.width * scale / 2;
+        let scalePosY = canvasOutput.height / 2 - canvasOutput.height * scale / 2;
+
+        // if (global.count < 100) {
+        //   console.log( canvasTemp.width * scale, canvasTemp.height * scale );
+        //   global.count++;
+        // }
+
+        contextTemp.clearRect(0, 0, canvasTemp.width, canvasTemp.height);
+        contextTemp.putImageData(imageData, newPosX, newPosY);
+
+        contextOutput.imageSmoothingEnabled = false;
+        contextOutput.drawImage(canvasTemp,scalePosX,scalePosY,canvasTemp.width * scale,canvasTemp.height * scale);
+
+      }
+      
+      // contextOutput.filter = 'none';
+
+    }
+    
+  }
+  
+}
+
+
+
+function inRange( num, comp, range) {
+  return num >= comp - range && num <= comp + range;
+}
+
+function randomInRange(min,max) {
+    return Math.floor(Math.random()*(max-min+1)+min);
+}
+	</script>
+</body>
+</html>
